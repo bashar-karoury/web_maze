@@ -1,7 +1,7 @@
 const config = {
 	type: Phaser.AUTO,
 	width: 700,
-	height: 520,
+	height: 550,
 	physics: {
 		default: 'arcade',
 		arcade: {
@@ -27,9 +27,9 @@ const margin_from_left = 10;
 const margin_from_up = 10;
 const player_size = square_size;
 let mazeData = [];
-let path = [];
-const mazeHeight = 30;
-const mazeWidth = 30;
+let paths = [];
+const mazeHeight = 31;   // beware of the plus one
+const mazeWidth = 31;
 let obj;
 let backward_path = [];
 function preload() {
@@ -52,16 +52,17 @@ function create() {
 
 
 	// Start the maze generation from the top-left corner
-	generateMaze(1, 1);
-	console.log(path);
-	path.sort((a, b) => a.x - b.x);
-	console.log(path);
+	generateMaze(1, 1, []);
+	console.log(paths.length)
+	for (let i = 0; i < paths.length; i++) {
+		console.log(paths[i].length);
+	}
 
 
 	draw_maze.call(this);
-	draw_destination.call(this);
-	get_path();
-	console.log(walls.children.entries);
+	//draw_destination.call(this);
+	//get_path();
+	//console.log(walls.children.entries);
 
 	// Draw the player as a blue square
 	player = this.add.rectangle((walls.children.entries)[1].x, walls.children.entries[1 + mazeData.length].y, player_size, player_size, 0x0095DD);
@@ -101,8 +102,9 @@ function update() {
 
 function generateMaze(x, y) {
 	// Mark the current cell as a path (0)
+	console.log("path at start with length " + path.length)
 	mazeData[y][x] = 0;
-
+	//let path = [];
 	// Define the possible directions to move
 	const directions = shuffle([
 		{ dx: 2, dy: 0 },  // Right
@@ -120,10 +122,8 @@ function generateMaze(x, y) {
 		if (isInBounds(nx, ny) && mazeData[ny][nx] === 1) {
 			// Remove the wall between the current cell and the next cell
 			mazeData[y + dy / 2][x + dx / 2] = 0;
-			path.push({ y: (y + dy / 2), x: (x + dx / 2) })
-			path.push({ y: (ny), x: (nx) })
 			// Recursively generate the maze from the new position
-			generateMaze(nx, ny);
+			generateMaze(nx, ny, path);
 		}
 	}
 }
@@ -156,52 +156,59 @@ function draw_maze() {
 
 
 
-function get_path() {
+// function get_path() {
 
-	// start from end and go to start
-	let point = path.at(-2);
-	console.log(point);
-	let directions = [{ dx: -1, dy: 0 }, { dx: 0, dy: -1 }, { dx: 1, dy: 0 }, { dx: 0, dy: 1 }]
-	let count = 100;
-	let prev_point = path.at(-1)
-	while ((point.x != 1 && point.y != 1) && count--) {
-		// look for neighbour 0
-		for (dir of directions) {
-			if (((point.x + dir.dx) === prev_point.x) && ((point.y + dir.dy) === prev_point.y))
-				continue;
-			if (mazeData[point.x + dir.dx][point.y + dir.dy] === 0) {
-				break;
-			}
-		}
-		// push point to backward_path
-		backward_path.unshift(point);
-		// update point to point to the 0 point
-		prev_point = point;
-		point = { x: point.x + dir.dx, y: point.y + dir.dy }
-		console.log(point)
-	}
-}
+// 	// start from end and go to start
+// 	let point = path.at(-2);
+// 	console.log(point);
+// 	let directions = [{ dx: -1, dy: 0 }, { dx: 0, dy: -1 }, { dx: 1, dy: 0 }, { dx: 0, dy: 1 }]
+// 	let count = 100;
+// 	let prev_point = path.at(-1)
+// 	while ((point.x != 1 && point.y != 1) && count--) {
+// 		// look for neighbour 0
+// 		for (dir of directions) {
+// 			if (((point.x + dir.dx) === prev_point.x) && ((point.y + dir.dy) === prev_point.y))
+// 				continue;
+// 			if (mazeData[point.x + dir.dx][point.y + dir.dy] === 0) {
+// 				break;
+// 			}
+// 		}
+// 		// push point to backward_path
+// 		backward_path.unshift(point);
+// 		// update point to point to the 0 point
+// 		prev_point = point;
+// 		point = { x: point.x + dir.dx, y: point.y + dir.dy }
+// 		console.log(point)
+// 	}
+// }
 
 
+
+
+// function draw_destination() {
+// 	let lastPoint = path.at(-1);
+// 	//for (point of path) {
+// 	//this.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_up, square_size, square_size, 0x777777);
+// 	//}
+// 	this.add.rectangle(draw_square_size * lastPoint.x + margin_from_left, draw_square_size * lastPoint.y + margin_from_up, square_size, square_size, 0xFf0000);
+// }
 
 let count = 0;
-function draw_destination() {
-	let lastPoint = path.at(-1);
-	//for (point of path) {
-	//this.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_up, square_size, square_size, 0x777777);
-	//}
-	this.add.rectangle(draw_square_size * lastPoint.x + margin_from_left, draw_square_size * lastPoint.y + margin_from_up, square_size, square_size, 0xFf0000);
-}
+let i_path = 0;
 
 function printOneOfPath() {
-	if (count < path.length) {
-		let point = path[count];
-		obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_up, square_size, square_size, 0xff9d9d);
+	let col = 0xff9d9d;
+	if (count < paths[0].length) {
+		let point = paths[i_path][count];
+		obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_up, square_size, square_size, col);
 		count++;
 	}
-
 }
 
-// Set the interval to 2000 milliseconds (2 seconds)
-const intervalId = setInterval(printOneOfPath, 100);
+//Set the interval
+const intervalId = setInterval(printOneOfPath, 300);
 
+function getRandomHexColor() {
+	let color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+	return color.padEnd(7, '0'); // Ensures the color is 7 characters long (including '#')
+}
