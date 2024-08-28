@@ -21,18 +21,22 @@ let player;
 let exit;
 let cursors;
 let walls;
-const square_size = 30;
+let chase;
+const square_size = 12;
 const margin_between_squares = 2;
 const draw_square_size = square_size + margin_between_squares;
 const margin_from_left = 20;
 const margin_from_up = 20;
-const player_size = square_size;
+const player_size = square_size - 2;
 let mazeData = [];
 let paths = [];
-const mazeHeight = 11;   // beware of the plus one
-const mazeWidth = 11;
+const mazeHeight = 41;   // beware of the plus one
+const mazeWidth = 41;
 let obj;
 let backward_path = [];
+let selected_path = [];
+let stopped = false;
+let player_velocity = 200; // prev 160
 function preload() {
 
 }
@@ -44,6 +48,7 @@ function create() {
 	obj = this;
 	init_mazeData();
 	walls = this.physics.add.staticGroup();
+	chase = this.physics.add.staticGroup();
 
 	// Start the maze generation from the top-left corner
 	generateMaze(1, 1, []);
@@ -60,34 +65,29 @@ function create() {
 	player.body.setCollideWorldBounds(true);
 
 	this.physics.add.collider(player, walls);
-	this.physics.add.collider(player, exit, playerReachsExit, null);
+	this.physics.add.collider(player, exit, playerReachsExitCallup, null);
+	this.physics.add.collider(player, chase, chaseCatchPlayerCallup, null);
 
 	// Set up keyboard input
 	cursors = this.input.keyboard.createCursorKeys();
 }
 
 function update() {
-
+	if (stopped)
+		return;
 	// Handle player movement
 	player.body.setVelocity(0);
 
 	if (cursors.left.isDown) {
-		player.body.setVelocityX(-160);
+		player.body.setVelocityX(-player_velocity);
 	} else if (cursors.right.isDown) {
-		player.body.setVelocityX(160);
+		player.body.setVelocityX(player_velocity);
 	}
 
 	if (cursors.up.isDown) {
-		player.body.setVelocityY(-160);
+		player.body.setVelocityY(-player_velocity);
 	} else if (cursors.down.isDown) {
-		player.body.setVelocityY(160);
-	}
-	//if (player.x >= walls.children.entries[walls.children.entries.length - 10].x) {
-	if (0) {
-		alert("You Win!!");
-		haveWin = true;
-		player.x = 20;
-		location.reload();
+		player.body.setVelocityY(player_velocity);
 	}
 }
 function generateMaze(x, y, path = [], prev_zero = null) {
@@ -158,27 +158,8 @@ function draw_maze() {
 
 function draw_destination() {
 	let lastPoint = paths[0].at(-1);
-	exit = this.add.rectangle(draw_square_size * lastPoint.x + margin_from_left, draw_square_size * lastPoint.y + margin_from_up, square_size, square_size, 0x00E444);
+	exit = this.add.rectangle(draw_square_size * lastPoint.x + margin_from_left, draw_square_size * lastPoint.y + margin_from_up, square_size, square_size, 0xFFFFFF);
 	this.physics.add.existing(exit, true);
-}
-
-let count = 0;
-let i_path = 0;
-let col = getRandomHexColor();
-function printOneOfPath() {
-	if (count < paths[i_path].length) {
-		let point = paths[i_path][count];
-		obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_up, square_size, square_size, 0xff0000);
-		count++;
-	}
-}
-
-//Set the interval
-const intervalId = setInterval(printOneOfPath, 700);
-
-function getRandomHexColor() {
-	let color = '0x' + Math.floor(Math.random() * 16777215).toString(16);
-	return color.padEnd(7, '0'); // Ensures the color is 7 characters long (including '#')
 }
 
 
@@ -193,6 +174,39 @@ function init_mazeData() {
 
 }
 
-function playerReachsExit() {
-	alert("Hurray");
+function playerReachsExitCallup() {
+	alert("You Win!!");
+	haveWin = true;
+	location.reload();
+}
+
+
+//Set the interval
+const chasing_time_interval = 300;
+const intervalId = setInterval(draw_chase, chasing_time_interval);
+
+let count = 0;
+let startup_delay = 12;
+let startup_counter = 0;
+function draw_chase() {
+	const selected_path = paths[0];
+	if (startup_counter++ < startup_delay)
+		return;
+	if (count < selected_path.length) {
+		let point = selected_path[count];
+		let chase_block = obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_up, square_size, square_size, 0xff0000);
+		obj.physics.add.existing(chase_block, true); //immovable
+		chase.add(chase_block);
+		count++;
+	}
+}
+
+
+
+function chaseCatchPlayerCallup() {
+
+	stopped = true;
+	clearInterval(intervalId);
+	//alert("Game Over!!");
+	//location.reload(true);
 }
