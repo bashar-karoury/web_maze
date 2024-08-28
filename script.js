@@ -53,12 +53,6 @@ function create() {
 
 	// Start the maze generation from the top-left corner
 	generateMaze(1, 1, []);
-	console.log(paths.length)
-	for (let i = 0; i < paths.length; i++) {
-		console.log(paths[i].length);
-	}
-
-
 	draw_maze.call(this);
 	//draw_destination.call(this);
 	//get_path();
@@ -99,12 +93,14 @@ function update() {
 		location.reload();
 	}
 }
-
-function generateMaze(x, y) {
+function generateMaze(x, y, path = [], prev_zero = null) {
 	// Mark the current cell as a path (0)
-	console.log("path at start with length " + path.length)
 	mazeData[y][x] = 0;
-	//let path = [];
+	// Add the current cell to the path
+	if (prev_zero)
+		path.push(prev_zero);
+	path.push({ x, y });
+
 	// Define the possible directions to move
 	const directions = shuffle([
 		{ dx: 2, dy: 0 },  // Right
@@ -112,6 +108,9 @@ function generateMaze(x, y) {
 		{ dx: 0, dy: 2 },  // Down
 		{ dx: 0, dy: -2 }  // Up
 	]);
+
+	// Track if any moves were made
+	let moved = false;
 
 	// Try each direction in random order
 	for (const { dx, dy } of directions) {
@@ -122,12 +121,20 @@ function generateMaze(x, y) {
 		if (isInBounds(nx, ny) && mazeData[ny][nx] === 1) {
 			// Remove the wall between the current cell and the next cell
 			mazeData[y + dy / 2][x + dx / 2] = 0;
+			//path.push({ x: x + dx / 2, y: y + dy / 2 });
 			// Recursively generate the maze from the new position
-			generateMaze(nx, ny, path);
+			prev_zero = { x: x + dx / 2, y: y + dy / 2 };
+			generateMaze(nx, ny, path.slice(), prev_zero); // Pass a copy of the path
+			moved = true;
 		}
 	}
-}
 
+	// If no moves were made, it's a dead-end, so save the path
+	if (!moved) {
+		//path.pop();
+		paths.push(path);
+	}
+}
 function shuffle(array) {
 	for (let i = array.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
@@ -195,20 +202,25 @@ function draw_maze() {
 
 let count = 0;
 let i_path = 0;
-
+let col = getRandomHexColor();
 function printOneOfPath() {
-	let col = 0xff9d9d;
-	if (count < paths[0].length) {
+	if (count < paths[i_path].length) {
 		let point = paths[i_path][count];
 		obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_up, square_size, square_size, col);
 		count++;
 	}
+	else {
+		count = 0;
+		i_path++;
+		col = getRandomHexColor();
+		//console.log(col);
+	}
 }
 
 //Set the interval
-const intervalId = setInterval(printOneOfPath, 300);
+const intervalId = setInterval(printOneOfPath, 70);
 
 function getRandomHexColor() {
-	let color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+	let color = '0x' + Math.floor(Math.random() * 16777215).toString(16);
 	return color.padEnd(7, '0'); // Ensures the color is 7 characters long (including '#')
 }
