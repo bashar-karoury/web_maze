@@ -1,7 +1,7 @@
 const config = {
 	type: Phaser.AUTO,
-	width: 700,
-	height: 550,
+	width: 750,
+	height: 650,
 	physics: {
 		default: 'arcade',
 		arcade: {
@@ -18,18 +18,19 @@ const config = {
 const game = new Phaser.Game(config);
 
 let player;
+let exit;
 let cursors;
 let walls;
-const square_size = 15;
+const square_size = 30;
 const margin_between_squares = 2;
 const draw_square_size = square_size + margin_between_squares;
-const margin_from_left = 10;
-const margin_from_up = 10;
+const margin_from_left = 20;
+const margin_from_up = 20;
 const player_size = square_size;
 let mazeData = [];
 let paths = [];
-const mazeHeight = 31;   // beware of the plus one
-const mazeWidth = 31;
+const mazeHeight = 11;   // beware of the plus one
+const mazeWidth = 11;
 let obj;
 let backward_path = [];
 function preload() {
@@ -41,22 +42,17 @@ function create() {
 
 	// Initialize the maze grid
 	obj = this;
-	for (let row = 0; row < mazeHeight; row++) {
-		mazeData[row] = [];
-		for (let col = 0; col < mazeWidth; col++) {
-			mazeData[row][col] = 1; // Fill the grid with walls (1)
-		}
-	}
-
+	init_mazeData();
 	walls = this.physics.add.staticGroup();
-
 
 	// Start the maze generation from the top-left corner
 	generateMaze(1, 1, []);
 	draw_maze.call(this);
-	//draw_destination.call(this);
+
 	//get_path();
 	//console.log(walls.children.entries);
+	paths.sort((a, b) => b.length - a.length)
+	draw_destination.call(this);
 
 	// Draw the player as a blue square
 	player = this.add.rectangle((walls.children.entries)[1].x, walls.children.entries[1 + mazeData.length].y, player_size, player_size, 0x0095DD);
@@ -64,11 +60,12 @@ function create() {
 	player.body.setCollideWorldBounds(true);
 
 	this.physics.add.collider(player, walls);
+	this.physics.add.collider(player, exit, playerReachsExit, null);
 
 	// Set up keyboard input
 	cursors = this.input.keyboard.createCursorKeys();
 }
-let haveWin = false;
+
 function update() {
 
 	// Handle player movement
@@ -121,7 +118,6 @@ function generateMaze(x, y, path = [], prev_zero = null) {
 		if (isInBounds(nx, ny) && mazeData[ny][nx] === 1) {
 			// Remove the wall between the current cell and the next cell
 			mazeData[y + dy / 2][x + dx / 2] = 0;
-			//path.push({ x: x + dx / 2, y: y + dy / 2 });
 			// Recursively generate the maze from the new position
 			prev_zero = { x: x + dx / 2, y: y + dy / 2 };
 			generateMaze(nx, ny, path.slice(), prev_zero); // Pass a copy of the path
@@ -160,45 +156,11 @@ function draw_maze() {
 	}
 }
 
-
-
-
-// function get_path() {
-
-// 	// start from end and go to start
-// 	let point = path.at(-2);
-// 	console.log(point);
-// 	let directions = [{ dx: -1, dy: 0 }, { dx: 0, dy: -1 }, { dx: 1, dy: 0 }, { dx: 0, dy: 1 }]
-// 	let count = 100;
-// 	let prev_point = path.at(-1)
-// 	while ((point.x != 1 && point.y != 1) && count--) {
-// 		// look for neighbour 0
-// 		for (dir of directions) {
-// 			if (((point.x + dir.dx) === prev_point.x) && ((point.y + dir.dy) === prev_point.y))
-// 				continue;
-// 			if (mazeData[point.x + dir.dx][point.y + dir.dy] === 0) {
-// 				break;
-// 			}
-// 		}
-// 		// push point to backward_path
-// 		backward_path.unshift(point);
-// 		// update point to point to the 0 point
-// 		prev_point = point;
-// 		point = { x: point.x + dir.dx, y: point.y + dir.dy }
-// 		console.log(point)
-// 	}
-// }
-
-
-
-
-// function draw_destination() {
-// 	let lastPoint = path.at(-1);
-// 	//for (point of path) {
-// 	//this.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_up, square_size, square_size, 0x777777);
-// 	//}
-// 	this.add.rectangle(draw_square_size * lastPoint.x + margin_from_left, draw_square_size * lastPoint.y + margin_from_up, square_size, square_size, 0xFf0000);
-// }
+function draw_destination() {
+	let lastPoint = paths[0].at(-1);
+	exit = this.add.rectangle(draw_square_size * lastPoint.x + margin_from_left, draw_square_size * lastPoint.y + margin_from_up, square_size, square_size, 0x00E444);
+	this.physics.add.existing(exit, true);
+}
 
 let count = 0;
 let i_path = 0;
@@ -206,21 +168,31 @@ let col = getRandomHexColor();
 function printOneOfPath() {
 	if (count < paths[i_path].length) {
 		let point = paths[i_path][count];
-		obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_up, square_size, square_size, col);
+		obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_up, square_size, square_size, 0xff0000);
 		count++;
-	}
-	else {
-		count = 0;
-		i_path++;
-		col = getRandomHexColor();
-		//console.log(col);
 	}
 }
 
 //Set the interval
-const intervalId = setInterval(printOneOfPath, 70);
+const intervalId = setInterval(printOneOfPath, 700);
 
 function getRandomHexColor() {
 	let color = '0x' + Math.floor(Math.random() * 16777215).toString(16);
 	return color.padEnd(7, '0'); // Ensures the color is 7 characters long (including '#')
+}
+
+
+function init_mazeData() {
+
+	for (let row = 0; row < mazeHeight; row++) {
+		mazeData[row] = [];
+		for (let col = 0; col < mazeWidth; col++) {
+			mazeData[row][col] = 1; // Fill the grid with walls (1)
+		}
+	}
+
+}
+
+function playerReachsExit() {
+	alert("Hurray");
 }
