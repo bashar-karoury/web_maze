@@ -5,9 +5,16 @@ body {
 	justify-content: center;
 	align-items: center;
 	height: 100vh;
-	background-color: #242424;
+	background-color: #000000;
 }
 
 canvas {
 	display: block;
+}
+
+header {
+	display: flex;
+	position: absolute;
+	top: 10;
+
 }

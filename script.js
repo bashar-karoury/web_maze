@@ -1,7 +1,33 @@
+const mazeHeight = 11;   // beware of the plus one
+const mazeWidth = mazeHeight;
+const square_size = 25;
+const margin_between_squares = 2;
+const draw_square_size = square_size + margin_between_squares;
+const margin_from_left = 20;
+const margin_from_top = 20;
+const player_size = square_size;
+const chasing_time_interval = 1000;
+let intervalId;
+let player;
+let exit;
+let cursors;
+let walls;
+let chase;
+let obj;
+let mazeData = [];
+let paths = [];
+
+let player_velocity = 100; // prev 160
+let count = 0;
+let chasing_counter = 0;
+let startup_delay = 200;
+let startup_counter = 0;
+const canvas_width = Math.ceil(square_size * (mazeWidth + margin_between_squares) + margin_from_left * 4);
+const canvas_hight = Math.ceil(square_size * (mazeHeight + margin_between_squares) + margin_from_top * 4);
 const phaser_config = {
 	type: Phaser.AUTO,
-	width: 750,
-	height: 650,
+	width: canvas_width,
+	height: canvas_hight,
 	physics: {
 		default: 'arcade',
 		arcade: {
@@ -16,26 +42,8 @@ const phaser_config = {
 };
 
 const game = new Phaser.Game(phaser_config);
-let player;
-let exit;
-let cursors;
-let walls;
-let chase;
-const square_size = 12;
-const margin_between_squares = 2;
-const draw_square_size = square_size + margin_between_squares;
-const margin_from_left = 20;
-const margin_from_up = 20;
-const player_size = square_size;
-let mazeData = [];
-let paths = [];
-const mazeHeight = 41;   // beware of the plus one
-const mazeWidth = 41;
-let obj;
-let backward_path = [];
-let selected_path = [];
-let stopped = false;
-let player_velocity = 200; // prev 160
+
+
 function preload() {
 
 }
@@ -44,11 +52,12 @@ function create() {
 	// Create the maze layout using a 2D array
 
 	// Initialize the maze grid
+	paths = [];
+	mazeData = [];
 	obj = this;
 	init_mazeData();
 	walls = this.physics.add.staticGroup();
 	chase = this.physics.add.staticGroup();
-
 	// Start the maze generation from the top-left corner
 	generateMaze(1, 1, []);
 	render_maze.call(this);
@@ -63,17 +72,18 @@ function create() {
 	// define collisions and collision events
 	player.body.setCollideWorldBounds(true);
 	this.physics.add.collider(player, walls);
-	this.physics.add.collider(player, exit, playerReachsExitCallup, null);
-	this.physics.add.collider(player, chase, chaserCatchPlayerCallup, null);
+	this.physics.add.collider(player, exit, playerReachsExitCallback, null);
+	this.physics.add.collider(player, chase, chaserCatchPlayerCallback, null);
 
 	// Set up keyboard input
 	cursors = this.input.keyboard.createCursorKeys();
+	count = 0;
+	startup_counter = 0;
+	//intervalId = setInterval(release_chaser, chasing_time_interval);
 }
 
 function update() {
 	// stop updating if game stopped, win or lose
-	if (stopped)
-		return;
 	// Handle player movement
 	player.body.setVelocity(0);
 
@@ -88,6 +98,7 @@ function update() {
 	} else if (cursors.down.isDown) {
 		player.body.setVelocityY(player_velocity);
 	}
+	release_chaser();
 }
 
 
@@ -149,7 +160,7 @@ function render_maze() {
 	for (let row = 0; row < mazeData.length; row++) {
 		for (let col = 0; col < mazeData[row].length; col++) {
 			if (mazeData[row][col] === 1) {
-				let wall = this.add.rectangle(draw_square_size * col + margin_from_left, draw_square_size * row + margin_from_up, square_size, square_size, 0x444444);
+				let wall = this.add.rectangle(draw_square_size * col + margin_from_left, draw_square_size * row + margin_from_top, square_size, square_size, 0x444444);
 				this.physics.add.existing(wall, true); // true makes it immovable
 				walls.add(wall);
 			}
@@ -159,7 +170,7 @@ function render_maze() {
 
 function render_exit() {
 	let lastPoint = paths[0].at(-1);
-	exit = this.add.rectangle(draw_square_size * lastPoint.x + margin_from_left, draw_square_size * lastPoint.y + margin_from_up, square_size, square_size, 0xFFFFFF);
+	exit = this.add.rectangle(draw_square_size * lastPoint.x + margin_from_left, draw_square_size * lastPoint.y + margin_from_top, square_size, square_size, 0xFFFFFF);
 	this.physics.add.existing(exit, true);
 }
 
@@ -175,41 +186,34 @@ function init_mazeData() {
 
 }
 
-function playerReachsExitCallup() {
-	alert("You Win!!");
-	haveWin = true;
-	location.reload();
-}
 
 
-//Set the interval
-const chasing_time_interval = 100;
-const intervalId = setInterval(draw_chaser, chasing_time_interval);
-
-let count = 0;
-let startup_delay = 12;
-let startup_counter = 0;
-function draw_chaser() {
+function release_chaser() {
 	const selected_path = paths[0];
 	if (startup_counter++ < startup_delay)
 		return;
-	if (count < selected_path.length) {
-		let point = selected_path[count];
-		let chase_block = obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_up, square_size, square_size, 0xff0000);
-		obj.physics.add.existing(chase_block, true); //immovable
-		chase.add(chase_block);
-		count++;
+	if (chasing_counter++ > 30) {
+		if (count < selected_path.length) {
+			let point = selected_path[count];
+			let chase_block = obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_top, square_size, square_size, 0xff0000);
+			obj.physics.add.existing(chase_block, true); //immovable
+			chase.add(chase_block);
+			count++;
+		}
+		chasing_counter = 0;
 	}
 }
 
+function playerReachsExitCallback() {
+	// clearInterval(intervalId);
+	obj.scene.restart();
+
+}
 
 
-function chaserCatchPlayerCallup() {
-
-	stopped = true;
-	clearInterval(intervalId);
-	//alert("Game Over!!");
-	//location.reload(true);
+function chaserCatchPlayerCallback() {
+	// clearInterval(intervalId);
+	obj.scene.restart();
 }
 
 
