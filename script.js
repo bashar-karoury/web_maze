@@ -33,7 +33,7 @@ const phaser_config = {
 	type: Phaser.canvas,
 	width: canvas_width,
 	height: canvas_hight,
-	canvas: document.getElementById('anvas'), // Use an already existing canvas
+	canvas: document.getElementById('canvas'), // Use an already existing canvas
 	physics: {
 		default: 'arcade',
 		arcade: {

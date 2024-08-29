@@ -25,13 +25,15 @@ body {
 }
 
 canvas {
-	background-color: #f4f4f4;
-	padding: 20px;
-	border-right: 2px solid #ccc;
+	/* background-color: #f4f4f4; */
+	/* padding: 2px; */
+	/* border-right: 2px solid #ccc; */
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	left: 40%;
+	margin-left: 50px;
+	margin-top: 50px;
 }
 
 .leaderboard {
