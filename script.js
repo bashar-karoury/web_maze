@@ -1,4 +1,4 @@
-const mazeHeight = 11;   // beware of the plus one
+const mazeHeight = 21;   // beware of the plus one
 const mazeWidth = mazeHeight;
 const square_size = 25;
 const margin_between_squares = 2;
@@ -7,6 +7,7 @@ const margin_from_left = 20;
 const margin_from_top = 20;
 const player_size = square_size;
 const chasing_time_interval = 1000;
+const chasing_time_frequency = 15;
 let intervalId;
 let player;
 let exit;
@@ -74,6 +75,7 @@ function create() {
 	this.physics.add.collider(player, walls);
 	this.physics.add.collider(player, exit, playerReachsExitCallback, null);
 	this.physics.add.collider(player, chase, chaserCatchPlayerCallback, null);
+	this.physics.add.collider(exit, chase, chaserCatchPlayerCallback, null);
 
 	// Set up keyboard input
 	cursors = this.input.keyboard.createCursorKeys();
@@ -192,7 +194,7 @@ function release_chaser() {
 	const selected_path = paths[0];
 	if (startup_counter++ < startup_delay)
 		return;
-	if (chasing_counter++ > 30) {
+	if (chasing_counter++ > chasing_time_frequency) {
 		if (count < selected_path.length) {
 			let point = selected_path[count];
 			let chase_block = obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_top, square_size, square_size, 0xff0000);
@@ -220,6 +222,13 @@ function chaserCatchPlayerCallback() {
 
 function render_player() {
 	// Draw the player as a blue square
-	player = this.add.rectangle((walls.children.entries)[1].x, walls.children.entries[1 + mazeData.length].y, player_size, player_size, 0x0095DD);
+	//player = this.add.rectangle((walls.children.entries)[1].x, walls.children.entries[1 + mazeData.length].y, player_size, player_size, 0x0095DD);
+	player = this.add.circle(
+		(walls.children.entries)[1].x,          // X position
+		walls.children.entries[1 + mazeData.length].y, // Y position
+		player_size / 2,                        // Radius (half the size of the player rectangle)
+		0x0095DD                                // Fill color
+	);
+
 	this.physics.add.existing(player);
 }
