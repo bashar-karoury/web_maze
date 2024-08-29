@@ -13,8 +13,8 @@ canvas {
 }
 
 header {
-	display: flex;
+	display: block;
 	position: absolute;
 	top: 10;
-
+	font-family: 'Trebuchet MS', sans-serif;
 }

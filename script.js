@@ -14,17 +14,21 @@ let exit;
 let cursors;
 let walls;
 let chase;
-let obj;
+let scene_obj;
+let start_button;
 let mazeData = [];
 let paths = [];
 
-let player_velocity = 100; // prev 160
+let player_velocity = 300; // prev 160
 let count = 0;
 let chasing_counter = 0;
 let startup_delay = 200;
 let startup_counter = 0;
 const canvas_width = Math.ceil(square_size * (mazeWidth + margin_between_squares) + margin_from_left * 4);
 const canvas_hight = Math.ceil(square_size * (mazeHeight + margin_between_squares) + margin_from_top * 4);
+
+let game_running = false;
+
 const phaser_config = {
 	type: Phaser.AUTO,
 	width: canvas_width,
@@ -46,61 +50,54 @@ const game = new Phaser.Game(phaser_config);
 
 
 function preload() {
-
+	this.load.spritesheet('button', 'button.png', {
+		frameWidth: 120,
+		frameHeight: 40
+	});
 }
 
 function create() {
+	// button addition
+	add_start_button.call(this);
 	// Create the maze layout using a 2D array
 
 	// Initialize the maze grid
 	paths = [];
 	mazeData = [];
-	obj = this;
+	scene_obj = this;
 	init_mazeData();
 	walls = this.physics.add.staticGroup();
 	chase = this.physics.add.staticGroup();
-	// Start the maze generation from the top-left corner
-	generateMaze(1, 1, []);
-	render_maze.call(this);
+	generate_maze();
 
-	// sort paths by length from longest to shortest
-	paths.sort((a, b) => b.length - a.length)
-
-	render_exit.call(this);
-
-	render_player.call(this);
-
-	// define collisions and collision events
-	player.body.setCollideWorldBounds(true);
-	this.physics.add.collider(player, walls);
-	this.physics.add.collider(player, exit, playerReachsExitCallback, null);
-	this.physics.add.collider(player, chase, chaserCatchPlayerCallback, null);
-	this.physics.add.collider(exit, chase, chaserCatchPlayerCallback, null);
 
 	// Set up keyboard input
 	cursors = this.input.keyboard.createCursorKeys();
 	count = 0;
 	startup_counter = 0;
-	//intervalId = setInterval(release_chaser, chasing_time_interval);
 }
 
 function update() {
-	// stop updating if game stopped, win or lose
-	// Handle player movement
-	player.body.setVelocity(0);
 
-	if (cursors.left.isDown) {
-		player.body.setVelocityX(-player_velocity);
-	} else if (cursors.right.isDown) {
-		player.body.setVelocityX(player_velocity);
-	}
+	if (game_running) {
 
-	if (cursors.up.isDown) {
-		player.body.setVelocityY(-player_velocity);
-	} else if (cursors.down.isDown) {
-		player.body.setVelocityY(player_velocity);
+		// stop updating if game stopped, win or lose
+		// Handle player movement
+		player.body.setVelocity(0);
+
+		if (cursors.left.isDown) {
+			player.body.setVelocityX(-player_velocity);
+		} else if (cursors.right.isDown) {
+			player.body.setVelocityX(player_velocity);
+		}
+
+		if (cursors.up.isDown) {
+			player.body.setVelocityY(-player_velocity);
+		} else if (cursors.down.isDown) {
+			player.body.setVelocityY(player_velocity);
+		}
+		release_chaser();
 	}
-	release_chaser();
 }
 
 
@@ -162,8 +159,8 @@ function render_maze() {
 	for (let row = 0; row < mazeData.length; row++) {
 		for (let col = 0; col < mazeData[row].length; col++) {
 			if (mazeData[row][col] === 1) {
-				let wall = this.add.rectangle(draw_square_size * col + margin_from_left, draw_square_size * row + margin_from_top, square_size, square_size, 0x444444);
-				this.physics.add.existing(wall, true); // true makes it immovable
+				let wall = scene_obj.add.rectangle(draw_square_size * col + margin_from_left, draw_square_size * row + margin_from_top, square_size, square_size, 0x444444);
+				scene_obj.physics.add.existing(wall, true); // true makes it immovable
 				walls.add(wall);
 			}
 		}
@@ -172,8 +169,8 @@ function render_maze() {
 
 function render_exit() {
 	let lastPoint = paths[0].at(-1);
-	exit = this.add.rectangle(draw_square_size * lastPoint.x + margin_from_left, draw_square_size * lastPoint.y + margin_from_top, square_size, square_size, 0xFFFFFF);
-	this.physics.add.existing(exit, true);
+	exit = scene_obj.add.rectangle(draw_square_size * lastPoint.x + margin_from_left, draw_square_size * lastPoint.y + margin_from_top, square_size, square_size, 0xFFFFFF);
+	scene_obj.physics.add.existing(exit, true);
 }
 
 
@@ -197,8 +194,8 @@ function release_chaser() {
 	if (chasing_counter++ > chasing_time_frequency) {
 		if (count < selected_path.length) {
 			let point = selected_path[count];
-			let chase_block = obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_top, square_size, square_size, 0xff0000);
-			obj.physics.add.existing(chase_block, true); //immovable
+			let chase_block = scene_obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_top, square_size, square_size, 0xff0000);
+			scene_obj.physics.add.existing(chase_block, true); //immovable
 			chase.add(chase_block);
 			count++;
 		}
@@ -207,15 +204,20 @@ function release_chaser() {
 }
 
 function playerReachsExitCallback() {
-	// clearInterval(intervalId);
-	obj.scene.restart();
-
+	game_running = false;
+	display_win();
+	scene_obj.time.delayedCall(2000, () => {
+		scene_obj.scene.restart();
+	});
 }
 
 
 function chaserCatchPlayerCallback() {
-	// clearInterval(intervalId);
-	obj.scene.restart();
+	game_running = false;
+	display_game_over();
+	scene_obj.time.delayedCall(2000, () => {
+		scene_obj.scene.restart();
+	});
 }
 
 
@@ -223,12 +225,70 @@ function chaserCatchPlayerCallback() {
 function render_player() {
 	// Draw the player as a blue square
 	//player = this.add.rectangle((walls.children.entries)[1].x, walls.children.entries[1 + mazeData.length].y, player_size, player_size, 0x0095DD);
-	player = this.add.circle(
+	player = scene_obj.add.circle(
 		(walls.children.entries)[1].x,          // X position
 		walls.children.entries[1 + mazeData.length].y, // Y position
-		player_size / 2,                        // Radius (half the size of the player rectangle)
+		(player_size) / 2,                        // Radius (half the size of the player rectangle)
 		0x0095DD                                // Fill color
 	);
+	player.setOrigin(0.5, 0.5);
+	scene_obj.physics.add.existing(player);
+}
 
-	this.physics.add.existing(player);
+
+function startGame() {
+	start_button.destroy();
+	render_game_scene_objects();
+	game_running = true;
+	// ball.body.velocity.set(150, -150);
+	//playing = true;
+}
+
+
+function add_start_button() {
+	const centerX = this.scale.width / 2;
+	const centerY = this.scale.height / 2;
+	start_button = this.add.image(centerX, centerY, 'button').setInteractive();
+	start_button.on('pointerdown', startGame);
+}
+
+
+function render_game_scene_objects() {
+	render_maze();
+	render_exit();
+	render_player();
+	// define collisions and collision events
+	player.body.setCollideWorldBounds(true);
+	scene_obj.physics.add.collider(player, walls);
+	scene_obj.physics.add.collider(player, exit, playerReachsExitCallback, null);
+	scene_obj.physics.add.collider(player, chase, chaserCatchPlayerCallback, null);
+	scene_obj.physics.add.collider(exit, chase, chaserCatchPlayerCallback, null);
+
+
+}
+
+function generate_maze() {
+	// Start the maze generation from the top-left corner
+	generateMaze(1, 1, []);
+	// sort paths by length from longest to shortest
+	paths.sort((a, b) => b.length - a.length)
+
+}
+
+
+function display_win() {
+	const centerX = scene_obj.scale.width / 2;
+	const centerY = scene_obj.scale.height / 4;
+	scene_obj.add.text(centerX, centerY, 'You win!', {
+		fontSize: '32px',
+		fill: '#ffffff'
+	});
+}
+function display_game_over() {
+	const centerX = scene_obj.scale.width / 2;
+	const centerY = scene_obj.scale.height / 4;
+	scene_obj.add.text(centerX, centerY, 'Game Over!', {
+		fontSize: '32px',
+		fill: '#ffffff'
+	});
 }
