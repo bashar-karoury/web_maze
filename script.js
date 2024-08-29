@@ -30,9 +30,10 @@ const canvas_hight = Math.ceil(square_size * (mazeHeight + margin_between_square
 let game_running = false;
 
 const phaser_config = {
-	type: Phaser.AUTO,
+	type: Phaser.canvas,
 	width: canvas_width,
 	height: canvas_hight,
+	canvas: document.getElementById('anvas'), // Use an already existing canvas
 	physics: {
 		default: 'arcade',
 		arcade: {

@@ -1,0 +1,43 @@
+body {
+	margin: 0;
+	font-family: Arial, sans-serif;
+	height: 100vh;
+	display: grid;
+	grid-template-rows: auto 1fr;
+}
+
+.header {
+	background-color: #333;
+	color: white;
+	text-align: center;
+	padding: 10px;
+}
+
+.logo {
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.main-content {
+	display: grid;
+	grid-template-columns: 3fr 1fr;
+	height: 100%;
+}
+
+canvas {
+	background-color: #f4f4f4;
+	padding: 20px;
+	border-right: 2px solid #ccc;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	left: 40%;
+}
+
+.leaderboard {
+	background-color: #f8f8f8;
+	padding: 20px;
+	display: flex;
+	justify-content: right;
+	align-items: right;
+}
