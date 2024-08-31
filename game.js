@@ -7,7 +7,7 @@ const margin_from_left = 20;
 const margin_from_top = 20;
 const player_size = square_size;
 const chasing_time_interval = 1000;
-const chasing_time_frequency = 15;
+const chasing_time_frequency = 5;
 let intervalId;
 let player;
 let exit;
@@ -51,17 +51,15 @@ const game = new Phaser.Game(phaser_config);
 
 
 function preload() {
-	this.load.spritesheet('button', 'button.png', {
-		frameWidth: 120,
-		frameHeight: 40
-	});
+	// this.load.spritesheet('button', 'button.png', {
+	// 	frameWidth: 120,
+	// 	frameHeight: 40
+	// });
 
 }
 
 function create() {
 	scene_obj = this;
-	// button addition
-	add_start_button.call(this);
 	// Create the maze layout using a 2D array
 
 	// Initialize the maze grid
@@ -73,8 +71,9 @@ function create() {
 	chase = this.physics.add.staticGroup();
 
 	generate_maze();
-
-	startGame(); // XXX rename it appropriately
+	render_game_scene_objects();
+	game_running = true;
+	//startGame(); // XXX rename it appropriately
 	// Set up keyboard input
 	cursors = this.input.keyboard.createCursorKeys();
 
@@ -232,6 +231,7 @@ function release_chaser() {
 			let chase_block = scene_obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_top, square_size, square_size, 0xff0000);
 			scene_obj.physics.add.existing(chase_block, true); //immovable
 			chase.add(chase_block);
+			mainGroup.addMultiple(chase.getChildren());
 			count++;
 		}
 		chasing_counter = 0;
@@ -281,12 +281,12 @@ function startGame() {
 }
 
 
-function add_start_button() {
-	const centerX = this.scale.width / 2;
-	const centerY = this.scale.height / 2;
-	start_button = this.add.image(centerX, centerY, 'button').setInteractive();
-	//start_button.on('pointerdown', startGame);
-}
+// function add_start_button() {
+// 	const centerX = this.scale.width / 2;
+// 	const centerY = this.scale.height / 2;
+// 	start_button = this.add.image(centerX, centerY, 'button').setInteractive();
+// 	//start_button.on('pointerdown', startGame);
+// }
 
 
 function render_game_scene_objects() {
@@ -321,11 +321,12 @@ function display_win() {
 	});
 }
 function display_game_over() {
+	setMainGroupInvisible();
 	const centerX = scene_obj.scale.width / 2;
 	const centerY = scene_obj.scale.height / 4;
 	scene_obj.add.text(centerX, centerY, 'Game Over!', {
-		fontSize: '32px',
-		fill: '#ffffff'
+		fontSize: '52px',
+		fill: '#FF0000'
 	});
 }
 
