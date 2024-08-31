@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Layout Example</title>
+	<title>The Web Maze</title>
 	<link rel="stylesheet" href="styles.css">
 	<script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
 </head>
@@ -12,12 +12,16 @@
 <body>
 	<div class="header">
 		<div class="logo">The Web Maze</div>
+		<button class="start_button"> Start the Game </button>
+		<button class="restart_button"> Restart the Game </button>
+		<button class="stop_button"> Stop the Game </button>
+
 	</div>
 	<div class="main-content">
 		<canvas class="canvas" id="canvas">Canvas</canvas>
 		<div class="leaderboard">Leaderboard</div>
 	</div>
-	<script src="script.js"></script>
+	<script type="module" src="main.js"></script>
 </body>
 
 </html>

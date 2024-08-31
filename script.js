@@ -1,6 +1,6 @@
-const mazeHeight = 21;   // beware of the plus one
+const mazeHeight = 31;   // beware of the plus one
 const mazeWidth = mazeHeight;
-const square_size = 25;
+const square_size = 17;
 const margin_between_squares = 2;
 const draw_square_size = square_size + margin_between_squares;
 const margin_from_left = 20;
@@ -19,7 +19,7 @@ let start_button;
 let mazeData = [];
 let paths = [];
 
-let player_velocity = 300; // prev 160
+let player_velocity = 150; // prev 160
 let count = 0;
 let chasing_counter = 0;
 let startup_delay = 200;
@@ -28,7 +28,7 @@ const canvas_width = Math.ceil(square_size * (mazeWidth + margin_between_squares
 const canvas_hight = Math.ceil(square_size * (mazeHeight + margin_between_squares) + margin_from_top * 4);
 
 let game_running = false;
-
+let mainGroup;
 const phaser_config = {
 	type: Phaser.canvas,
 	width: canvas_width,
@@ -55,9 +55,11 @@ function preload() {
 		frameWidth: 120,
 		frameHeight: 40
 	});
+
 }
 
 function create() {
+	scene_obj = this;
 	// button addition
 	add_start_button.call(this);
 	// Create the maze layout using a 2D array
@@ -65,38 +67,70 @@ function create() {
 	// Initialize the maze grid
 	paths = [];
 	mazeData = [];
-	scene_obj = this;
+
 	init_mazeData();
 	walls = this.physics.add.staticGroup();
 	chase = this.physics.add.staticGroup();
+
 	generate_maze();
 
-
+	startGame(); // XXX rename it appropriately
 	// Set up keyboard input
 	cursors = this.input.keyboard.createCursorKeys();
+
+	// add all objects to main group
+
+	mainGroup = this.add.group();
+	mainGroup.addMultiple(walls.getChildren());
+	mainGroup.addMultiple(chase.getChildren());
+	mainGroup.add(player);
+	mainGroup.add(exit);
+
+	setMainGroupInvisible();
+	this.scene.pause();
 	count = 0;
 	startup_counter = 0;
+
 }
 
 function update() {
 
+	//console.log(scene_obj.scene.visible);
 	if (game_running) {
 
 		// stop updating if game stopped, win or lose
 		// Handle player movement
-		player.body.setVelocity(0);
-
-		if (cursors.left.isDown) {
+		//player.body.setVelocity(0);
+		if (cursors.up.isDown && cursors.right.isDown) {
+			player.body.setVelocityY(-player_velocity);
+			player.body.setVelocityX(player_velocity);
+		}
+		else if (cursors.down.isDown && cursors.right.isDown) {
+			player.body.setVelocityY(player_velocity);
+			player.body.setVelocityX(player_velocity);
+		}
+		else if (cursors.up.isDown && cursors.left.isDown) {
+			player.body.setVelocityY(-player_velocity);
 			player.body.setVelocityX(-player_velocity);
-		} else if (cursors.right.isDown) {
+		}
+		else if (cursors.down.isDown && cursors.left.isDown) {
+			player.body.setVelocityY(player_velocity);
+			player.body.setVelocityX(-player_velocity);
+		}
+		else if (cursors.up.isDown) {
+			player.body.setVelocityY(-player_velocity);
+		}
+		else if (cursors.down.isDown) {
+			player.body.setVelocityY(player_velocity);
+		}
+
+		else if (cursors.left.isDown) {
+			player.body.setVelocityX(-player_velocity);
+		}
+		else if (cursors.right.isDown) {
 			player.body.setVelocityX(player_velocity);
 		}
 
-		if (cursors.up.isDown) {
-			player.body.setVelocityY(-player_velocity);
-		} else if (cursors.down.isDown) {
-			player.body.setVelocityY(player_velocity);
-		}
 		release_chaser();
 	}
 }
@@ -208,7 +242,7 @@ function playerReachsExitCallback() {
 	game_running = false;
 	display_win();
 	scene_obj.time.delayedCall(2000, () => {
-		scene_obj.scene.restart();
+		//scene_obj.scene.restart();
 	});
 }
 
@@ -216,8 +250,9 @@ function playerReachsExitCallback() {
 function chaserCatchPlayerCallback() {
 	game_running = false;
 	display_game_over();
+	//scene_obj.scene.sleep();
 	scene_obj.time.delayedCall(2000, () => {
-		scene_obj.scene.restart();
+		//scene_obj.scene.restart();
 	});
 }
 
@@ -250,7 +285,7 @@ function add_start_button() {
 	const centerX = this.scale.width / 2;
 	const centerY = this.scale.height / 2;
 	start_button = this.add.image(centerX, centerY, 'button').setInteractive();
-	start_button.on('pointerdown', startGame);
+	//start_button.on('pointerdown', startGame);
 }
 
 
@@ -293,3 +328,44 @@ function display_game_over() {
 		fill: '#ffffff'
 	});
 }
+
+
+document.querySelector('.restart_button').addEventListener('click', function () {
+	console.log("Button is clicked");
+	//scene_obj.scene.stop();
+	scene_obj.scene.restart();
+
+});
+document.querySelector('.stop_button').addEventListener('click', function () {
+	console.log("Button is clicked");
+	scene_obj.scene.stop();
+});
+
+function start_game() {
+	setMainGroupVisible();
+	scene_obj.scene.resume();
+}
+
+
+function restart_game() {
+	scene_obj.scene.restart();
+}
+
+function stop_game() {
+	scene_obj.scene.stop();
+}
+
+
+function setMainGroupInvisible() {
+	mainGroup.children.iterate((child) => {
+		child.setActive(false).setVisible(false); // Set all objects to active and visible when the event occurs
+	});
+}
+
+function setMainGroupVisible() {
+	mainGroup.children.iterate((child) => {
+		child.setActive(true).setVisible(true); // Set all objects to active and visible when the event occurs
+	});
+}
+
+export { start_game };
