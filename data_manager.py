@@ -18,7 +18,7 @@ class Player(Base):
     __tablename__ = 'players'
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(60))
-    password = Column(String(60))
+    password = Column(String(256))
     level = Column(Integer, ForeignKey('levels.id'), nullable=False)
 
     def __init__(self, *args, **kwargs):
@@ -26,6 +26,8 @@ class Player(Base):
         if kwargs:
             for key, value in kwargs.items():
                 setattr(self, key, value)
+        if not self.level:
+            self.level = 1
 
 
 class Level(Base):
@@ -58,3 +60,17 @@ def add_to_database(obj):
 def get_top_scores():
     """ Get list of top scorers """
     pass
+
+def close_session():
+    """ close current session """
+    session.close()
+
+def get_players_usernames():
+    """ gets list of usernames of all players"""
+    result = [row[0] for row in session.query(Player.username).all() ]
+    return result
+
+def getUserPassword(user):
+    """ returns password of player"""
+    result = session.query(Player).filter(Player.username == user).first()
+    return result.password
