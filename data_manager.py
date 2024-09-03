@@ -32,7 +32,7 @@ class Level(Base):
     """ level class contains game level configuration """
     __tablename__ = 'levels'
     id = Column(Integer, primary_key=True)
-    # to do, JSON config
+    config = Column(JSON, nullable=False)
  
     def __init__(self, *args, **kwargs):
         """Initialization of the Level"""
@@ -54,3 +54,7 @@ def add_to_database(obj):
     """ Add object to database """
     session.add(obj)
     session.commit()
+
+def get_top_scores():
+    """ Get list of top scorers """
+    pass
