@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from flask import Flask, jsonify, make_response, request
 from data_manager import close_session, Player, Level
-from data_manager import get_players_usernames, add_to_database, getUserPassword
+from data_manager import get_players_usernames, add_to_database, getUserPassword, getUserNextLevel, getTopPlayers
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
@@ -20,7 +20,7 @@ def non_protected():
 
     return "non protected\n", 200
 
-
+# xxxxxxxxx
 @app.route('/protected', methods=['GET'])
 @jwt_required()
 def protected():
@@ -81,11 +81,57 @@ def login():
     if not (username in get_players_usernames()) or not check_password_hash(getUserPassword(username), password):
         return jsonify({"msg": "Invalid credentials"}), 401
     print("Welcome to Web Maze")
+    # redirect to game page
+    XXXXXXXXXXXXXXXXXXXXXXXXXXXX
     # Generate JWT token
     access_token = create_access_token(identity=username)
     return jsonify(access_token=access_token), 200
 
+# @app.route('/next_level', methods=['GET'])
+# @jwt_required()
+# def get_next_level():
+#     current_user = get_jwt_identity()
+#     print(current_user)
+#     # get next level config
+#     result = getUserNextLevel(current_user)
+#     return jsonify(config=result), 200
 
+
+@app.route('/top_players', methods=['GET'])
+@jwt_required()
+def get_top_players():
+    current_user = get_jwt_identity()
+    print(current_user)
+    # get next level config
+    result = getTopPlayers()
+    return jsonify(top=result), 200
+
+XXXXXXXXXXXXXX change route to /user_name/info or config
+@app.route('/user_info', methods=['POST'])
+@jwt_required()
+def set_user_info():
+    current_user = get_jwt_identity()
+    print(current_user)
+    # set score and new level of the user
+    result = getTopPlayers()
+
+    # return the new level config
+
+    return jsonify(top=result), 200
+
+@app.route('/user_info', methods=['GET'])
+@jwt_required()
+def get_uesr_info():
+    current_user = get_jwt_identity()
+    print(current_user)
+    # get score and level of the user
+    # json user_info = {username:"username", score:user_score, level_number:number, level_config{
+    #                                                                                              squre_size:
+    #                                                                                              maze_width:   
+    #                                                                   
+    #                                                                                           }
+    #                   }
+    return jsonify(user_info), 200
 
 if __name__ == "__main__":
     """ Main Function """

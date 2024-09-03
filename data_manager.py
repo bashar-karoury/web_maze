@@ -20,6 +20,7 @@ class Player(Base):
     username = Column(String(60))
     password = Column(String(256))
     level = Column(Integer, ForeignKey('levels.id'), nullable=False)
+    score = Column(Integer)
 
     def __init__(self, *args, **kwargs):
         """Initialization of the Player"""
@@ -28,6 +29,8 @@ class Player(Base):
                 setattr(self, key, value)
         if not self.level:
             self.level = 1
+        if not self.score:
+            self.score = 0
 
 
 class Level(Base):
@@ -57,13 +60,29 @@ def add_to_database(obj):
     session.add(obj)
     session.commit()
 
-def get_top_scores():
-    """ Get list of top scorers """
-    pass
 
 def close_session():
     """ close current session """
     session.close()
+
+
+def set_player_score(username):
+    """ set score of username"""
+    pass
+
+def get_player_score(username):
+    """ get score of username"""
+    pass
+
+
+def set_player_level(username):
+    """ set score of username"""
+    pass
+
+def get_player_level(username):
+    """ get score of username"""
+    pass
+
 
 def get_players_usernames():
     """ gets list of usernames of all players"""
@@ -74,3 +93,13 @@ def getUserPassword(user):
     """ returns password of player"""
     result = session.query(Player).filter(Player.username == user).first()
     return result.password
+
+
+
+def getUserNextLevel(username):
+    """ return next level config for username"""
+    pass
+
+def getTopPlayers():
+    """ Get list of top scorers """
+    pass
