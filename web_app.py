@@ -68,26 +68,15 @@ def login():
 
     # if not json
     if not request.json:
-        return make_response(jsonify({'error': "Not json"}), 404)
+        return make_response(jsonify({'error': "Not json"}), 401)
     
     # if no there isn't username or password
     if not username or not password:
-        return make_response(jsonify({'error': "username or password missing"}), 404)
+        return make_response(jsonify({'error': "username or password missing"}), 401)
     
      # if username isn't registered in database
     if username not in get_players_usernames():
-        return make_response(jsonify({'error': "username doesn't exist"}), 404)
-    print(get_players_usernames())
-    print(getUserPassword(username))
-    if username in get_players_usernames():
-        print("username is in usernames")
-
-    if password == getUserPassword(username):
-        print("password is same")
-    
-
-    if check_password_hash(getUserPassword(username), password):
-        print("hash password is same")
+        return make_response(jsonify({'error': "username doesn't exist"}), 401)
     
     if not (username in get_players_usernames()) or not check_password_hash(getUserPassword(username), password):
         return jsonify({"msg": "Invalid credentials"}), 401
