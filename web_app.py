@@ -1,12 +1,14 @@
 #!/usr/bin/python3
+from datetime import timedelta
 from flask import Flask, jsonify, make_response, request
 from data_manager import close_session, Player, Level
-from data_manager import get_players_usernames, add_to_database, get_user_password, getUserNextLevel, getTopPlayers
+from data_manager import get_players_usernames, add_to_database, get_user_password, update_player_data, get_top_players, get_player_data
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 
 app.config['JWT_SECRET_KEY'] = '17c57c8ed4dfd13f291743aa243ff6d12e545e98b8e4e331'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=120)
 jwt = JWTManager(app)
 
 @app.teardown_appcontext
@@ -17,17 +19,8 @@ def close_db(error):
 
 @app.route('/', methods=['GET'])
 def non_protected():
-
+    # return authenitcaiton page
     return "non protected\n", 200
-
-# xxxxxxxxx
-@app.route('/protected', methods=['GET'])
-@jwt_required()
-def protected():
-    current_user = get_jwt_identity()
-    print(current_user)
-    return jsonify(logged_in_as=current_user), 200
-
 # Authentication Api
 
 # register
@@ -74,68 +67,44 @@ def login():
     if not username or not password:
         return make_response(jsonify({'error': "username or password missing"}), 401)
     
-     # if username isn't registered in database
-    if username not in get_players_usernames():
-        return make_response(jsonify({'error': "username doesn't exist"}), 401)
-    
+    # if username isn't registered in database or incorrect password
     if not (username in get_players_usernames()) or not check_password_hash(get_user_password(username), password):
         return jsonify({"msg": "Invalid credentials"}), 401
     print("Welcome to Web Maze")
     # redirect to game page
-    XXXXXXXXXXXXXXXXXXXXXXXXXXXX
     # Generate JWT token
     access_token = create_access_token(identity=username)
     return jsonify(access_token=access_token), 200
 
-# @app.route('/next_level', methods=['GET'])
-# @jwt_required()
-# def get_next_level():
-#     current_user = get_jwt_identity()
-#     print(current_user)
-#     # get next level config
-#     result = getUserNextLevel(current_user)
-#     return jsonify(config=result), 200
-
-
 @app.route('/top_players', methods=['GET'])
 @jwt_required()
-def get_top_players():
+def top_players():
     current_user = get_jwt_identity()
     print(current_user)
     # get next level config
-    result = getTopPlayers()
+    result = get_top_players()
     return jsonify(top=result), 200
 
 
-@app.route('/users/<username>', methods=['POST'])
+@app.route('/players_data/<username>', methods=['POST'])
 @jwt_required()
 def set_user_info(username):
     current_user = get_jwt_identity()
     if current_user != username:
          return make_response(jsonify({'error': "username isn't the same"}), 401)
     # set score and new level of the user
-    result = getTopPlayers()
+    player_data = request.get_json()
+    update_player_data(username, player_data)
+    return jsonify(get_player_data(username)), 200
 
-
-    # return the new level config
-
-    return jsonify(top=result), 200
-
-@app.route('/users/<username>', methods=['GET'])
+@app.route('/players_data/<username>', methods=['GET'])
 @jwt_required()
 def get_uesr_info(username):
-    current_user = get_jwt_identity()
-    if current_user != username:
-        return make_response(jsonify({'error': "username isn't the same"}), 401)
-    print(current_user)
-    # get score and level of the user
-    # json user_info = {username:"username", score:user_score, level_number:number, level_config{
-    #                                                                                              squre_size:
-    #                                                                                              maze_width:   
-    #                                                                   
-    #                                                                                           }
-    #                   }
-    return jsonify(user_info), 200
+    # no need for check for username 
+    # current_user = get_jwt_identity()
+    # if current_user != username:
+    #     return make_response(jsonify({'error': "username isn't the same"}), 401)
+    return jsonify(get_player_data(username)), 200
 
 if __name__ == "__main__":
     """ Main Function """
