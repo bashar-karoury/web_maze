@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from flask import Flask, jsonify, make_response, request
 from data_manager import close_session, Player, Level
-from data_manager import get_players_usernames, add_to_database, getUserPassword, getUserNextLevel, getTopPlayers
+from data_manager import get_players_usernames, add_to_database, get_user_password, getUserNextLevel, getTopPlayers
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
@@ -78,7 +78,7 @@ def login():
     if username not in get_players_usernames():
         return make_response(jsonify({'error': "username doesn't exist"}), 401)
     
-    if not (username in get_players_usernames()) or not check_password_hash(getUserPassword(username), password):
+    if not (username in get_players_usernames()) or not check_password_hash(get_user_password(username), password):
         return jsonify({"msg": "Invalid credentials"}), 401
     print("Welcome to Web Maze")
     # redirect to game page

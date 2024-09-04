@@ -4,7 +4,7 @@
 """
 from sqlalchemy import create_engine, Column, Integer, String, JSON, ForeignKey, desc
 # from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.orm import declarative_base
 Base = declarative_base()
 
@@ -19,18 +19,34 @@ class Player(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(60))
     password = Column(String(256))
-    level = Column(Integer, ForeignKey('levels.id'), nullable=False)
+    level_id = Column(Integer, ForeignKey('levels.id'), nullable=False)
     score = Column(Integer)
+    level = relationship('Level')
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         """Initialization of the Player"""
         if kwargs:
             for key, value in kwargs.items():
                 setattr(self, key, value)
-        if not self.level:
-            self.level = 1
+        if not self.level_id:
+            self.level_id = 1
         if not self.score:
             self.score = 0
+    
+    def to_dict(self):
+        """ parse player data as dict"""
+        new_dict = {}
+        for key, value in (self.__dict__).items():
+            if key == '_sa_instance_state' or key == 'password' or key == 'level':
+               continue
+            new_dict[key] = value
+        return new_dict
+
+    def update(self, **kwargs):
+        """ update Player attributes """
+        if kwargs:
+            for key, value in kwargs.items():
+                setattr(self, key, value)
 
 
 class Level(Base):
@@ -44,6 +60,7 @@ class Level(Base):
         if kwargs:
             for key, value in kwargs.items():
                 setattr(self, key, value)
+    
 
 
 
@@ -66,45 +83,40 @@ def close_session():
     session.close()
 
 
-def set_player_score(username):
+
+def update_player_data(username, player_data):
+    """ update player data """
+    player = session.query(Player).filter(Player.username == username).first()
+    player.update(**player_data)
+    session.commit()
+
+
+def get_player_data(username):
     """ set score of username"""
-    pass
-
-def get_player_score(username):
-    """ get score of username"""
-    pass
-
-
-def set_player_level(username):
-    """ set score of username"""
-    pass
-
-def get_player_level(username):
-    """ get score of username"""
-    pass
+    player = session.query(Player).filter(Player.username == username).first()
+    player_data = player.to_dict()
+    player_data['current_level_config'] = player.level.config
+    return player_data
 
 
 def get_players_usernames():
     """ gets list of usernames of all players"""
-    result = [row[0] for row in session.query(Player.username).all() ]
-    return result
+    return [row[0] for row in session.query(Player.username).all() ]
 
 
-# XXXXXXXXXX rename to _
-def getUserPassword(user):
+def get_user_password(username):
     """ returns password of player"""
-    result = session.query(Player).filter(Player.username == user).first()
-    return result.password
+    player = session.query(Player).filter(Player.username == username).first()
+    return player.password
 
 
 
-def getUserNextLevel(username):
-    """ return next level config for username"""
-    pass
+# def get_user_next_level(username):
+#     """ return next level config for username"""
+#     pass
 
-def getTopPlayers():
+def get_top_players():
     """ Get list of top scorers """
     results = session.query(Player.username).order_by(desc(Player.score)).all()
     tops = [row[0] for row in results ]
-    print(tops)
     return tops
