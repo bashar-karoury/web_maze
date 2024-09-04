@@ -106,23 +106,27 @@ def get_top_players():
     result = getTopPlayers()
     return jsonify(top=result), 200
 
-XXXXXXXXXXXXXX change route to /user_name/info or config
-@app.route('/user_info', methods=['POST'])
+
+@app.route('/users/<username>', methods=['POST'])
 @jwt_required()
-def set_user_info():
+def set_user_info(username):
     current_user = get_jwt_identity()
-    print(current_user)
+    if current_user != username:
+         return make_response(jsonify({'error': "username isn't the same"}), 401)
     # set score and new level of the user
     result = getTopPlayers()
+
 
     # return the new level config
 
     return jsonify(top=result), 200
 
-@app.route('/user_info', methods=['GET'])
+@app.route('/users/<username>', methods=['GET'])
 @jwt_required()
-def get_uesr_info():
+def get_uesr_info(username):
     current_user = get_jwt_identity()
+    if current_user != username:
+        return make_response(jsonify({'error': "username isn't the same"}), 401)
     print(current_user)
     # get score and level of the user
     # json user_info = {username:"username", score:user_score, level_number:number, level_config{

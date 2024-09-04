@@ -2,7 +2,7 @@
 """ Main Module which contains classes and basic function to add,
     remove, retrieve and update objects in database
 """
-from sqlalchemy import create_engine, Column, Integer, String, JSON, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, JSON, ForeignKey, desc
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import declarative_base
@@ -89,6 +89,8 @@ def get_players_usernames():
     result = [row[0] for row in session.query(Player.username).all() ]
     return result
 
+
+# XXXXXXXXXX rename to _
 def getUserPassword(user):
     """ returns password of player"""
     result = session.query(Player).filter(Player.username == user).first()
@@ -102,4 +104,7 @@ def getUserNextLevel(username):
 
 def getTopPlayers():
     """ Get list of top scorers """
-    pass
+    results = session.query(Player.username).order_by(desc(Player.score)).all()
+    tops = [row[0] for row in results ]
+    print(tops)
+    return tops
