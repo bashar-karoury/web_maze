@@ -1,0 +1,55 @@
+body {
+	margin: 0;
+	font-family: Arial, sans-serif;
+	height: 100vh;
+	display: grid;
+	grid-template-rows: auto 1fr;
+	background-color: #000000;
+	justify-content: center;
+	align-items: center;
+}
+
+
+
+.header {
+	background-color: #000000;
+	color: white;
+	text-align: center;
+	padding: 10px;
+	/* font-family: "Protest Guerrilla", sans-serif; */
+
+}
+
+.logo {
+	font-size: 200px;
+	/* font-weight: bold; */
+	/* width: 20%; */
+	left: 2%;
+	top: 2%;
+	text-align: center;
+	font-family: "Rubik Maze", system-ui;
+	font-weight: 1;
+	font-style: normal;
+
+}
+
+.buttons_container {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+}
+
+.auth_button {
+	font-family: "Protest Guerrilla", sans-serif;
+	width: 200px;
+	height: 200px;
+	/* background-color: #e0e0e0; */
+	border: none;
+	font-size: 52px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.auth_button:hover {
+	background-color: #cccccc;
+}

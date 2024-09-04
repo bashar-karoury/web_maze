@@ -18,7 +18,7 @@ def close_db(error):
 
 
 @app.route('/', methods=['GET'])
-def non_protected():
+def authenticate():
     # return authenitcaiton page
     return "non protected\n", 200
 # Authentication Api

@@ -5,20 +5,34 @@ body {
 	display: grid;
 	grid-template-rows: auto 1fr;
 	background-color: #000000;
+	justify-content: center;
+	align-items: center;
 }
+
+.auth_button {
+	font-family: "Protest Guerrilla", sans-serif;
+	font-size: 100px;
+}
+
 
 .header {
 	background-color: #000000;
 	color: white;
 	text-align: center;
 	padding: 10px;
+	/* font-family: "Protest Guerrilla", sans-serif; */
+	font-family: "Rubik Maze", system-ui;
+	font-weight: 10;
+	font-style: normal;
+
 }
 
 .logo {
-	font-size: 34px;
-	font-weight: bold;
-	width: 20%;
-	left: 0%;
+	font-size: 100px;
+	/* font-weight: bold; */
+	/* width: 20%; */
+	left: 2%;
+	top: 2%;
 	text-align: left;
 }
 

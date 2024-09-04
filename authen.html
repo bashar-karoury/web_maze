@@ -5,8 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>The Web Maze</title>
-	<link rel="stylesheet" href="styles.css">
-	<script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+	<link rel="stylesheet" href="authen_styles.css">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Protest+Guerrilla&display=swap" rel="stylesheet">
@@ -16,15 +15,14 @@
 <body>
 	<div class="header">
 		<div class="logo">The Web Maze</div>
-		<button class="start_button"> Start the Game </button>
-		<button class="restart_button"> Restart the Game </button>
-		<button class="stop_button"> Stop the Game </button>
+	</div>
 
+
+	<div class="buttons_container">
+		<button class="auth_button" id="login"> login </button>
+		<button class="auth_button" id="register"> register </button>
 	</div>
-	<div class="main-content">
-		<canvas class="canvas" id="canvas">Canvas</canvas>
-		<div class="leaderboard">Leaderboard</div>
-	</div>
+
 	<script type="module" src="main.js"></script>
 </body>
 
