@@ -30,12 +30,12 @@ header {
 }
 
 #logo {
-	font-size: 80px;
+	font-size: 90px;
 	font-weight: bold;
 	font-family: "Rubik Maze", system-ui;
 	font-weight: 1;
 	font-style: normal;
-	/* width: 270px; */
+	padding-top: 20px;
 }
 
 #level-score {
@@ -62,7 +62,7 @@ main {
 	padding: 0%;
 	display: flex;
 	flex-direction: column;
-	width: 30%;
+	width: 50%;
 	max-height: 100%;
 	/* padding: 20px; */
 	border-right: 2px solid black;
@@ -77,16 +77,27 @@ main {
 	/* border: 2px solid brown; */
 	text-align: center;
 	height: 30%;
+
+}
+
+#summary p {
+	padding-left: 30px;
+	height: 20px;
+	text-align: left;
+	font-size: 30px;
+
 }
 
 #top-players {
 	flex-grow: 1;
 	/* padding: 20px; */
 	/* background-color: #e0e0e0; */
-	/* border: 2px solid gray; */
+	border: 2px solid rgb(79, 79, 79);
 	text-align: left;
 	height: 80px;
-	padding-left: 10px;
+	margin-top: 10px;
+	padding-left: 40px;
+
 
 }
 
@@ -97,9 +108,10 @@ main {
 }
 
 #top-players ul {
-	padding: 10px;
+	padding-left: 20px;
 	height: 80%;
 	font-size: larger;
+	list-style-type: none;
 }
 
 #top-players li {

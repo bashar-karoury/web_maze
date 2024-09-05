@@ -85,7 +85,7 @@ function create() {
 	mainGroup.add(player);
 	mainGroup.add(exit);
 
-	setMainGroupInvisible();
+	// setMainGroupInvisible();
 	this.scene.pause();
 	count = 0;
 	startup_counter = 0;
@@ -330,17 +330,17 @@ function display_game_over() {
 	});
 }
 
+// XXXXXXX
+// document.querySelector('.restart_button').addEventListener('click', function () {
+// 	console.log("Button is clicked");
+// 	//scene_obj.scene.stop();
+// 	scene_obj.scene.restart();
 
-document.querySelector('.restart_button').addEventListener('click', function () {
-	console.log("Button is clicked");
-	//scene_obj.scene.stop();
-	scene_obj.scene.restart();
-
-});
-document.querySelector('.stop_button').addEventListener('click', function () {
-	console.log("Button is clicked");
-	scene_obj.scene.stop();
-});
+// });
+// document.querySelector('.stop_button').addEventListener('click', function () {
+// 	console.log("Button is clicked");
+// 	scene_obj.scene.stop();
+// });
 
 function start_game() {
 	setMainGroupVisible();
