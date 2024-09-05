@@ -65,20 +65,15 @@ body {
 .buttons_container {
 	display: flex;
 	gap: 20px;
-	display: none;
 }
 
 .login_container {
 	display: flex;
-	/* display: none; */
-	/* justify-content: center; */
 }
 
 
 .register_container {
 	display: flex;
-	display: none;
-	/* justify-content: center; */
 }
 
 
@@ -124,6 +119,7 @@ body {
 	margin: 5px;
 	box-sizing: border-box;
 	display: block;
+	border-radius: 4px;
 }
 
 p {
@@ -140,6 +136,7 @@ p {
 	font-family: "Protest Guerrilla", sans-serif;
 	font-size: 32px;
 	width: 20%;
+	border-radius: 4px;
 	cursor: pointer;
 	transition: background-color 0.3s ease;
 	margin-top: 10px;
@@ -147,4 +144,9 @@ p {
 
 .submit:hover {
 	background-color: #858585;
+}
+
+
+.hidden {
+	display: none;
 }

@@ -24,7 +24,7 @@
 			<button class="auth_button" id="register"> register </button>
 		</div>
 
-		<div class="login_container center_container">
+		<div class="login_container center_container hidden">
 			<div class="form-group">
 				<p> Login </p>
 			</div>
@@ -39,18 +39,19 @@
 			<button type="button" class="submit">Submit</button>
 		</div>
 
-		<div class="register_container center_container">
-			<h3> Register </h3>
+		<div class="register_container center_container hidden">
+			<div class="form-group">
+				<p> Register </p>
+			</div>
 			<div class="form-group">
 				<label for="username">Username:</label>
-				<input type="text" id="register_username" name="username">
+				<input type="text" id="login_username" name="username">
 			</div>
 			<div class="form-group">
 				<label for="password">Password:</label>
-				<input type="password" id="register_password" name="password">
+				<input type="password" id="login_password" name="password">
 			</div>
 			<button type="button" class="submit">Submit</button>
-
 		</div>
 	</div>
 	<script type="module" src="auth.js"></script>
