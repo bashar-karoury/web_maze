@@ -1,67 +1,125 @@
-body {
+* {
+	/* box-sizing: border-box; */
 	margin: 0;
+	padding: 0;
 	font-family: Arial, sans-serif;
-	height: 100vh;
-	display: grid;
-	grid-template-rows: auto 1fr;
-	background-color: #000000;
-	justify-content: center;
-	align-items: center;
-}
-
-.auth_button {
-	font-family: "Protest Guerrilla", sans-serif;
-	font-size: 100px;
-}
-
-
-.header {
-	background-color: #000000;
+	background-color: black;
 	color: white;
-	text-align: center;
-	padding: 10px;
-	/* font-family: "Protest Guerrilla", sans-serif; */
-	font-family: "Rubik Maze", system-ui;
-	font-weight: 10;
-	font-style: normal;
-
+	height: 100%;
+	font-family: "Protest Guerrilla", sans-serif;
 }
 
-.logo {
-	font-size: 100px;
-	/* font-weight: bold; */
-	/* width: 20%; */
-	left: 2%;
-	top: 2%;
-	text-align: left;
-}
-
-.main-content {
-	display: grid;
-	grid-template-columns: 3fr 1fr;
+html {
 	height: 100%;
 }
 
-canvas {
-	/* background-color: #f4f4f4; */
-	/* padding: 2px; */
-	/* border-right: 2px solid #ccc; */
+body {
+	display: flex;
+	flex-direction: column;
+	/* height: 50vh; */
+	/* height: 100%; */
+}
+
+header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
+	/* background-color: #f0f0f0; */
+	border-bottom: 2px solid black;
+}
+
+#logo {
+	font-size: 80px;
+	font-weight: bold;
+	font-family: "Rubik Maze", system-ui;
+	font-weight: 1;
+	font-style: normal;
+	/* width: 270px; */
+}
+
+#level-score {
+	font-family: "Protest Guerrilla", sans-serif;
+	display: flex;
+	gap: 20px;
+}
+
+#level,
+#score {
+	padding: 10px;
+	/* background-color: lightgreen; */
+	border: 2px solid green;
+	border-radius: 5px;
+}
+
+main {
+	display: flex;
+	flex-grow: 1;
+}
+
+#sidebar {
+	font-family: "Protest Guerrilla", sans-serif;
+	padding: 0%;
+	display: flex;
+	flex-direction: column;
+	width: 30%;
+	max-height: 100%;
+	/* padding: 20px; */
+	border-right: 2px solid black;
+	/* background-color: #f8f8f8; */
+	text-align: left;
+}
+
+#summary {
+	margin-bottom: 20px;
+	/* padding: 20px; */
+	/* background-color: #f4e3cb; */
+	/* border: 2px solid brown; */
+	text-align: center;
+	height: 30%;
+}
+
+#top-players {
+	flex-grow: 1;
+	/* padding: 20px; */
+	/* background-color: #e0e0e0; */
+	/* border: 2px solid gray; */
+	text-align: left;
+	height: 80px;
+	padding-left: 10px;
+
+}
+
+#top-players h2 {
+	height: 40px;
+	font-size: 40px;
+	padding-bottom: 30px;
+}
+
+#top-players ul {
+	padding: 10px;
+	height: 80%;
+	font-size: larger;
+}
+
+#top-players li {
+	padding: 0;
+	height: 40px;
+	font-size: larger;
+}
+
+
+#game-area {
+	flex-grow: 1;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	left: 40%;
-	margin-left: 30%;
-	margin-top: 50px;
+	/* padding: 20px; */
+	position: relative;
 }
 
-.leaderboard {
-	background-color: #f8f8f8;
-	padding: 20px;
-	display: flex;
-	justify-content: left;
-	align-items: right;
-	text-align: left;
-	color: white;
-	background-color: #000000;
-	border: 1px solid #494949;
+#gameCanvas {
+	width: 100%;
+	/* height: 100%; */
+	/* border: 2px solid red; */
 }

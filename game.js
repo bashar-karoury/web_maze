@@ -7,7 +7,7 @@ const margin_from_left = 20;
 const margin_from_top = 20;
 const player_size = square_size;
 const chasing_time_interval = 1000;
-const chasing_time_frequency = 5;
+const chasing_time_frequency = 20;
 let intervalId;
 let player;
 let exit;
