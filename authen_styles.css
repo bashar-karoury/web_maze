@@ -49,14 +49,20 @@ body {
 	width: 100%;
 	height: 100%;
 	display: flex;
+	flex-direction: column;
+	/* Makes elements stack vertically */
+	align-items: flex-start;
+	/* Aligns labels and inputs to the left */
 	justify-content: center;
 	align-items: center;
-	gap: 20px;
+
 
 }
 
 
 .buttons_container {
+	display: flex;
+	gap: 20px;
 	display: none;
 }
 
@@ -100,8 +106,19 @@ body {
 
 .center_container input {
 	font-family: "Protest Guerrilla", sans-serif;
-	width: 100%;
+	width: 300%;
 	padding: 10px;
 	margin: 5px;
 	box-sizing: border-box;
+	display: block;
+}
+
+p {
+	font-family: "Protest Guerrilla", sans-serif;
+	display: block;
+	color: #ffffff;
+	font-size: 42px;
+	align-content: left;
+	padding: 10px;
+	margin: 5px;
 }
