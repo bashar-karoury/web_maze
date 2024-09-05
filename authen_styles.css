@@ -150,3 +150,10 @@ p {
 .hidden {
 	display: none;
 }
+
+
+.register_now {
+	font-family: "Protest Guerrilla", sans-serif;
+	font-size: 12px;
+	color: #ffffff;
+}
