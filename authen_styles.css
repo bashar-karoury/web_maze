@@ -115,7 +115,8 @@ body {
 }
 
 .center_container input {
-	/* font-family: "Protest Guerrilla", sans-serif; */
+	font-family: "Protest Guerrilla", sans-serif;
+	font-size: 22px;
 	flex: 1;
 	/* Make input field take up remaining space */
 	min-width: 10%;
@@ -129,8 +130,21 @@ p {
 	/* font-family: "Protest Guerrilla", sans-serif; */
 	display: block;
 	/* color: #ffffff; */
-	font-size: 42px;
+	font-size: 52px;
 	/* align-content: left; */
 	/* padding: 10px; */
 	margin: 5px;
+}
+
+.submit {
+	font-family: "Protest Guerrilla", sans-serif;
+	font-size: 32px;
+	width: 20%;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	margin-top: 10px;
+}
+
+.submit:hover {
+	background-color: #858585;
 }
