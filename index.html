@@ -14,22 +14,23 @@
 </head>
 
 <body>
-	<header>
-		<div id="logo">The Web Maze</div>
+	<div class="main-container">
+		<div class="left-container">
+			<header>
+				<div id="logo">The Web Maze</div>
 
-		<div id="level-score">
-			<div id="level">LEVEL 3</div>
-			<div id="score">SCORE 140</div>
-		</div>
-		<!-- <button class="start_button"> Start the Game </button>
+
+				<!-- <button class="start_button"> Start the Game </button>
 		<button class="restart_button"> Restart the Game </button>
 		<button class="stop_button"> Stop the Game </button> -->
-	</header>
-	<main>
-		<section id="sidebar">
+			</header>
+			<!-- <section id="sidebar"> -->
 			<div id="summary">
-				<p> Simple Game where you should escape the maze before chaser can catch you. Be quick or chaser will
-					catch you</p>
+				<p> Simple Game where you should escape the maze before <span id="chaser">chaser</span> can catch you.
+					Be quick or
+					you
+					will be catched
+				</p>
 			</div>
 			<div id="top-players">
 				<h2>🏆 Top Players</h2>
@@ -39,11 +40,18 @@
 					<li> 🥉Mohammad 100</li>
 				</ul>
 			</div>
-		</section>
-		<section id="game-area">
-			<canvas id="canvas"></canvas>
-		</section>
-	</main>
+			<!-- </section> -->
+		</div>
+		<div class="right-container">
+			<div id="level-score">
+				<div id="level">LEVEL:<span> 3</span></div>
+				<div id="score">SCORE:<span> 140</span></div>
+			</div>
+			<section id="game-area">
+				<canvas id="canvas"></canvas>
+			</section>
+		</div>
+	</div>
 	<script type="module" src="main.js"></script>
 </body>
 

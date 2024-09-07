@@ -1,6 +1,6 @@
 const mazeHeight = 31;   // beware of the plus one
 const mazeWidth = mazeHeight;
-const square_size = 17;
+const square_size = 27;
 const margin_between_squares = 2;
 const draw_square_size = square_size + margin_between_squares;
 const margin_from_left = 20;
@@ -24,8 +24,8 @@ let count = 0;
 let chasing_counter = 0;
 let startup_delay = 200;
 let startup_counter = 0;
-const canvas_width = Math.ceil(square_size * (mazeWidth + margin_between_squares) + margin_from_left * 4);
-const canvas_hight = Math.ceil(square_size * (mazeHeight + margin_between_squares) + margin_from_top * 4);
+const canvas_width = Math.ceil(square_size * (mazeWidth + margin_between_squares) + margin_from_left * 5);
+const canvas_hight = Math.ceil(square_size * (mazeHeight + margin_between_squares) + margin_from_top * 5);
 
 let game_running = false;
 let mainGroup;
