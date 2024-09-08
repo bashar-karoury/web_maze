@@ -51,11 +51,6 @@ const game = new Phaser.Game(phaser_config);
 
 
 function preload() {
-	// this.load.spritesheet('button', 'button.png', {
-	// 	frameWidth: 120,
-	// 	frameHeight: 40
-	// });
-
 }
 
 function create() {
@@ -72,8 +67,7 @@ function create() {
 
 	generate_maze();
 	render_game_scene_objects();
-	game_running = true;
-	//startGame(); // XXX rename it appropriately
+
 	// Set up keyboard input
 	cursors = this.input.keyboard.createCursorKeys();
 
@@ -84,8 +78,8 @@ function create() {
 	mainGroup.addMultiple(chase.getChildren());
 	mainGroup.add(player);
 	mainGroup.add(exit);
-
-	// setMainGroupInvisible();
+	game_running = true;
+	setMainGroupInvisible();
 	this.scene.pause();
 	count = 0;
 	startup_counter = 0;
@@ -323,11 +317,16 @@ function display_win() {
 function display_game_over() {
 	setMainGroupInvisible();
 	const centerX = scene_obj.scale.width / 2;
-	const centerY = scene_obj.scale.height / 4;
+	const centerY = scene_obj.scale.height / 2;
 	scene_obj.add.text(centerX, centerY, 'Game Over!', {
-		fontSize: '52px',
+		fontSize: '82px',
 		fill: '#FF0000'
 	});
+	restart_game();
+	// show button 
+	document.querySelector('#start_game_button').classList.toggle('hidden');
+	// hide canvas
+	document.querySelector('#canvas').classList.toggle('hidden');
 }
 
 // XXXXXXX
@@ -343,6 +342,10 @@ function display_game_over() {
 // });
 
 function start_game() {
+	// hide button 
+	document.querySelector('#start_game_button').classList.toggle('hidden');
+	// show canvas
+	document.querySelector('#canvas').classList.toggle('hidden');
 	setMainGroupVisible();
 	scene_obj.scene.resume();
 }
@@ -358,15 +361,19 @@ function stop_game() {
 
 
 function setMainGroupInvisible() {
+
 	mainGroup.children.iterate((child) => {
 		child.setActive(false).setVisible(false); // Set all objects to active and visible when the event occurs
 	});
 }
 
 function setMainGroupVisible() {
+	console.log(mainGroup);
+	console.log(mainGroup.children);
 	mainGroup.children.iterate((child) => {
 		child.setActive(true).setVisible(true); // Set all objects to active and visible when the event occurs
 	});
 }
 
+// start_game();
 export { start_game };

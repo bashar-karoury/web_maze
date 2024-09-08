@@ -125,6 +125,10 @@ header {
 	font-weight: 100;
 }
 
+#chaser {
+	color: red;
+}
+
 #top-players {
 	/* flex-grow: 1; */
 	/* padding: 20px; */
@@ -172,6 +176,30 @@ header {
 
 }
 
-#chaser {
-	color: red;
+#game-area * {
+
+	position: absolute;
+	/* display: block; */
+}
+
+
+#start_game_button {
+	/* display: block; */
+	height: 80px;
+	width: 270px;
+	font-size: 40px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	background-color: white;
+	color: black;
+}
+
+#start_game_button:hover {
+	background-color: #cccccc;
+}
+
+#canvas {}
+
+.hidden {
+	display: none;
 }

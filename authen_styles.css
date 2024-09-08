@@ -147,13 +147,11 @@ p {
 }
 
 
-.hidden {
-	display: none;
-}
 
 
 .register_now {
+	padding-top: 10px;
 	font-family: "Protest Guerrilla", sans-serif;
-	font-size: 12px;
+	font-size: 17px;
 	color: #ffffff;
 }
