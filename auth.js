@@ -1,3 +1,10 @@
+
+const login_item = document.querySelector('#login');
+const buttons_container = document.querySelector('.buttons_container');
+const login_container = document.querySelector('.login_container');
+const submit_button = document.querySelector('.login_container .submit');
+
+
 document.querySelector('#login').addEventListener('click', function () {
 	console.log("login is clicked");
 	// hide athentication buttons
