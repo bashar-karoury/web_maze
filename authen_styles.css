@@ -48,7 +48,7 @@ body {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	justify-content: center;
-	width: 50%;
+	width: 60%;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
@@ -62,7 +62,7 @@ body {
 }
 
 
-.buttons_container {
+.authentication_buttons {
 	display: flex;
 	gap: 20px;
 }
@@ -101,12 +101,18 @@ body {
 	width: 100%;
 }
 
+.input_container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
 .center_container label {
 	/* font-family: "Protest Guerrilla", sans-serif; */
 	display: block;
 	margin-bottom: 5px;
 	margin: 5px;
-	font-size: 22px;
+	font-size: 32px;
 }
 
 .center_container input {
@@ -126,7 +132,7 @@ p {
 	/* font-family: "Protest Guerrilla", sans-serif; */
 	display: block;
 	/* color: #ffffff; */
-	font-size: 52px;
+	font-size: 62px;
 	/* align-content: left; */
 	/* padding: 10px; */
 	margin: 5px;
@@ -146,6 +152,13 @@ p {
 	background-color: #858585;
 }
 
+.validation_error {
+	/* width: 15%; */
+	color: red;
+	text-align: left;
+	/* flex-direction: row; */
+	padding-left: 10px;
+}
 
 
 
@@ -153,7 +166,8 @@ p {
 	padding-top: 10px;
 	font-family: "Protest Guerrilla", sans-serif;
 	font-size: 17px;
-	color: #ffffff;
+	color: #3958d6;
+	cursor: pointer;
 }
 
 .hidden {

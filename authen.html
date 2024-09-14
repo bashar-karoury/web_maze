@@ -19,7 +19,7 @@
 
 	<div class="main">
 
-		<div class="buttons_container center_container">
+		<div class="authentication_buttons center_container">
 			<button class="auth_button" id="login"> login </button>
 			<button class="auth_button" id="register"> register </button>
 		</div>
@@ -30,11 +30,17 @@
 			</div>
 			<div class="form-group">
 				<label for="username">Username:</label>
-				<input type="text" id="login_username" name="username">
+				<div class="input_container">
+					<input type="text" id="login_username" name="username">
+					<div class="validation_error hidden" id="login_username_error"> </div>
+				</div>
 			</div>
 			<div class="form-group">
 				<label for="password">Password:</label>
-				<input type="password" id="login_password" name="password">
+				<div class="input_container">
+					<input type="password" id="login_password" name="password">
+					<div class="validation_error hidden" id="login_password_error"> </div>
+				</div>
 			</div>
 			<button type="button" class="submit">Submit</button>
 			<span class="register_now"> not registered yet?, register now</span>
@@ -46,16 +52,22 @@
 			</div>
 			<div class="form-group">
 				<label for="username">Username:</label>
-				<input type="text" id="login_username" name="username">
+				<div class="input_container">
+					<input type="text" id="register_username" name="username">
+					<div class="validation_error hidden" id="register_username_error"> </div>
+				</div>
 			</div>
 			<div class="form-group">
 				<label for="password">Password:</label>
-				<input type="password" id="login_password" name="password">
+				<div class="input_container">
+					<input type="password" id="register_password" name="password">
+					<div class="validation_error hidden" id="register_password_error"> </div>
+				</div>
 			</div>
 			<button type="button" class="submit">Submit</button>
 		</div>
 	</div>
-	<script type="module" src="auth.js"></script>
+	<script type="module" src="authen_script.js"></script>
 </body>
 
 </html>

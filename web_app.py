@@ -5,8 +5,9 @@ from data_manager import close_session, Player, Level
 from data_manager import get_players_usernames, add_to_database, get_user_password, update_player_data, get_top_players, get_player_data
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_cors import CORS
 app = Flask(__name__)
-
+cors = CORS(app, resources={r"*": {"origins": "*"}})
 app.config['JWT_SECRET_KEY'] = '17c57c8ed4dfd13f291743aa243ff6d12e545e98b8e4e331'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=120)
 jwt = JWTManager(app)
@@ -49,7 +50,7 @@ def register():
     print("user signed up successfully")
 
     # return the created jwt token
-    return "registered\n", 201
+    return make_response(jsonify({'registered': True})), 201
 
 
 
@@ -108,4 +109,4 @@ def get_uesr_info(username):
 
 if __name__ == "__main__":
     """ Main Function """
-    app.run(host='0.0.0.0', port=5500, debug=True)
+    app.run(host='0.0.0.0', port=5600, debug=True)
