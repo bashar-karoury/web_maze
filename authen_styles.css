@@ -101,6 +101,15 @@ body {
 	width: 100%;
 }
 
+.ver-group {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	margin-bottom: 10px;
+	width: 100%;
+}
+
 .input_container {
 	display: flex;
 	flex-direction: column;
@@ -132,7 +141,7 @@ p {
 	/* font-family: "Protest Guerrilla", sans-serif; */
 	display: block;
 	/* color: #ffffff; */
-	font-size: 62px;
+	font-size: 72px;
 	/* align-content: left; */
 	/* padding: 10px; */
 	margin: 5px;
@@ -169,6 +178,18 @@ p {
 	color: #3958d6;
 	cursor: pointer;
 }
+
+.autherization_error {
+	display: block;
+	color: red;
+	font-size: 25px;
+	/* align-content: left; */
+	/* padding: 10px; */
+	/* margin: 5px; */
+	/* width: 30px; */
+	/* height: 30px; */
+}
+
 
 .hidden {
 	display: none;
