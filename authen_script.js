@@ -56,33 +56,40 @@ submit_login.addEventListener('click', function () {
 
 		// send POST request to backend
 		(async () => {
-			const response = await login_to_backend({ 'username': user_name, 'password': password });
-			console.log(response);
 
-			if (response.ok) {
-				const data = await response.json();
-				// register the jwt and then should redirect to the game page
-				const jwt = data.access_token;
-				localStorage.setItem('jwt', jwt);
 
-				// method 1: 
-				// store the jwt in a cooki and use window.location.href = '/game.html';
-				window.location.href = '/index.html';
-				// in the backend add new route to /game.html and send the file from server
-				// is there any security implications??? may be remove cooki after loading the new page?
-				// I think it is associated with the auth.html page and will not get set in game.html
-				// INVESTIGATE 
-				//console.log(data.access_token);
-				//show_login();
-				console.log("Logged in Successfully");
-				// load the game page
+			try {
+				const response = await login_to_backend({ 'username': user_name, 'password': password });
+				console.log(response);
+
+				if (response.ok) {
+					const data = await response.json();
+					// register the jwt and then should redirect to the game page
+					const jwt = data.access_token;
+					localStorage.setItem('jwt', jwt);
+
+					// method 1: 
+					// store the jwt in a cooki and use window.location.href = '/game.html';
+					window.location.href = '/index.html';
+					// in the backend add new route to /game.html and send the file from server
+					// is there any security implications??? may be remove cooki after loading the new page?
+					// I think it is associated with the auth.html page and will not get set in game.html
+					// INVESTIGATE 
+					//console.log(data.access_token);
+					//show_login();
+					console.log("Logged in Successfully");
+					// load the game page
+				}
+				else {
+					console.error("Failed to login");
+					login_error.textContent = "Either username or password is incorrect"
+					login_error.classList.remove('hidden');
+
+					// todo: display error of failed to register
+				}
 			}
-			else {
-				console.error("Failed to login");
-				login_error.textContent = "Either username or password is incorrect"
-				login_error.classList.remove('hidden');
-
-				// todo: display error of failed to register
+			catch (err) {
+				console.log("Errrrrrrrrrrrrror");
 			}
 		})();
 	}

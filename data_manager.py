@@ -117,6 +117,10 @@ def get_user_password(username):
 
 def get_top_players():
     """ Get list of top scorers """
-    results = session.query(Player.username).order_by(desc(Player.score)).all()
-    tops = [row[0] for row in results ]
+    results = session.query(Player.username, Player.score).order_by(desc(Player.score)).limit(5).all()
+    print(results)
+    tops = []
+    for result in results:
+        tops.append({'name':result[0], 'score':result[1]})
+    # tops = [row[0] for row in results ]
     return tops

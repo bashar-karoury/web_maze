@@ -154,7 +154,7 @@ header {
 	padding-left: 40px;
 	height: 80%;
 	font-size: larger;
-	list-style-type: none;
+	list-style-type: upper-roman;
 }
 
 #top-players li {
@@ -163,6 +163,10 @@ header {
 	font-size: larger;
 }
 
+#top-players li::before {
+	content: '     ';
+	margin-right: 10px;
+}
 
 #game-area {
 	/* flex-grow: 1; */
