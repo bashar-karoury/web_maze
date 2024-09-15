@@ -63,8 +63,6 @@ const get_player_info = function () {
 	).catch(err => {
 		console.error(err);
 	})
-	console.log("Just Before returning player_info");
-
 }
 
 load_top_players();
@@ -149,9 +147,9 @@ const reload_player_info = async () => {
 	// console.log("data----");
 	console.log(player_info);
 	// update score
-	score_value_item.textContent = player_info.score;
+	update_score(player_info.score);
 	// update level
-	level_value_item.textContent = player_info.level_id;
+	update_level(player_info.level_id);
 	// update level_config
 	// todo:- should equals the fetched data config
 	current_maze_config = {
@@ -165,7 +163,7 @@ const reload_player_info = async () => {
 function preload() {
 	// fetch player info + current local configuration
 	reload_player_info();
-
+	// new game reload
 }
 
 function create() {
@@ -350,19 +348,65 @@ function release_chaser() {
 
 function playerReachsExitCallback() {
 	game_running = false;
-	display_win();
-	// reload new config
-	display_play_next();
+	// todo display win
+
+	// update score and level
+	update_score();
+	update_level();
+
+	// todo post player_info to server
+	post_player_info().then(() => {
+		start_new_game();
+	}).catch(err => {
+		console.error(err);
+	})
+	//
 }
+
+const post_player_info = function () {
+
+	// fetch post http request to post player info score and new level
+	const url = `http://127.0.0.1:5600/players_data/${current_user_name}`;
+	return fetch(url, {
+		method: 'GET',
+		headers: {
+			'Authorization': `Bearer ${jwt}`, // Include JWT token in Authorization header
+			'Content-Type': 'application/json', // You can set additional headers as needed
+		},
+		data: {
+			score: ,
+			level_id:,
+		}
+	}).then(response => {
+		if (!response.ok)
+			throw (new Error("Failed Fetching Top Players"));
+		console.log(response);
+		return response.json();
+	}).then(data => {
+		console.log(data);
+		return (data);
+	}
+	).catch(err => {
+		console.error(err);
+	})
+
+}
+
 
 
 function chaserCatchPlayerCallback() {
 	game_running = false;
-	display_game_over();
-	display_play_next();
+	//todo display game over
+	start_new_game();
 }
 
 
+const update_score = function (score) {
+	score_value_item.textContent = score;
+};
+const update_level = function (level) {
+	level_value_item.textContent = level;
+};
 
 function render_player() {
 	// Draw the player as a blue square
@@ -418,19 +462,13 @@ function display_win() {
 		fill: '#ffffff'
 	});
 }
-function display_game_over() {
+function start_new_game() {
 	setMainGroupInvisible();
-	const centerX = scene_obj.scale.width / 2;
-	const centerY = scene_obj.scale.height / 2;
-	scene_obj.add.text(centerX, centerY, 'Game Over!', {
-		fontSize: '82px',
-		fill: '#FF0000'
-	});
 	restart_game();
 	// show button 
-	document.querySelector('#start_game_button').classList.toggle('hidden');
+	document.querySelector('#start_game_button').classList.remove('hidden');
 	// hide canvas
-	document.querySelector('#canvas').classList.toggle('hidden');
+	document.querySelector('#canvas').classList.add('hidden');
 }
 
 function start_game() {
