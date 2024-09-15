@@ -67,6 +67,8 @@ submit_login.addEventListener('click', function () {
 					// register the jwt and then should redirect to the game page
 					const jwt = data.access_token;
 					localStorage.setItem('jwt', jwt);
+					console.log("current user_name ", user_name);
+					localStorage.setItem('current_user_name', user_name);
 
 					// method 1: 
 					// store the jwt in a cooki and use window.location.href = '/game.html';

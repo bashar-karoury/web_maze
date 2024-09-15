@@ -1,6 +1,12 @@
-// load jwt from local store to be used in further api requests
+// load jwt  and user_name from local store to be used in further api requests
 const jwt = localStorage.getItem('jwt');
-// console.log(jwt);
+const current_user_name = localStorage.getItem('current_user_name');
+
+//HTML items
+const level_value_item = document.querySelector('#level_value');
+const score_value_item = document.querySelector('#score_value');
+
+
 const TOP_PLAYERS_REFRESH_PERIOD = 60;
 const top_players_ul = document.querySelector('#top_players_list');
 
@@ -33,6 +39,34 @@ const load_top_players = function () {
 		console.error(err);
 	})
 }
+
+const get_player_info = function () {
+	console.log("loading player info");
+	let player_info;
+
+	const url = `http://127.0.0.1:5600/players_data/${current_user_name}`;
+	return fetch(url, {
+		method: 'GET',
+		headers: {
+			'Authorization': `Bearer ${jwt}`, // Include JWT token in Authorization header
+			'Content-Type': 'application/json', // You can set additional headers as needed
+		},
+	}).then(response => {
+		if (!response.ok)
+			throw (new Error("Failed Fetching Top Players"));
+		console.log(response);
+		return response.json();
+	}).then(data => {
+		console.log(data);
+		return (data);
+	}
+	).catch(err => {
+		console.error(err);
+	})
+	console.log("Just Before returning player_info");
+
+}
+
 load_top_players();
 setInterval(() => {
 	load_top_players
@@ -43,6 +77,12 @@ document.querySelector('#start_game_button').addEventListener('click', function 
 	start_game();
 });
 
+// document.querySelector('#next_game_button').addEventListener('click', next_game);
+// const next_game = function () {
+// 	console.log("Button is clicked");
+// 	// reload config
+// 	start_game();
+// }
 
 
 let current_maze_config = {
@@ -76,8 +116,8 @@ let count = 0;
 let chasing_counter = 0;
 // let startup_delay = 200;
 let startup_counter = 0;
-const canvas_width = Math.ceil(current_maze_config.square_size * (current_maze_config.mazeHeight + margin_between_squares) + margin_from_left * 5);
-const canvas_hight = Math.ceil(current_maze_config.square_size * (current_maze_config.mazeHeight + margin_between_squares) + margin_from_top * 5);
+let canvas_width = Math.ceil(current_maze_config.square_size * (current_maze_config.mazeHeight + margin_between_squares) + margin_from_left * 5);
+let canvas_hight = Math.ceil(current_maze_config.square_size * (current_maze_config.mazeHeight + margin_between_squares) + margin_from_top * 5);
 
 let game_running = false;
 let score;
@@ -104,8 +144,28 @@ const phaser_config = {
 
 const game = new Phaser.Game(phaser_config);
 
-
+const reload_player_info = async () => {
+	let player_info = await get_player_info();
+	// console.log("data----");
+	console.log(player_info);
+	// update score
+	score_value_item.textContent = player_info.score;
+	// update level
+	level_value_item.textContent = player_info.level_id;
+	// update level_config
+	// todo:- should equals the fetched data config
+	current_maze_config = {
+		player_velocity: 150,
+		startup_delay: 200,
+		chasing_time_frequency: 20,
+		mazeHeight: 31,
+		square_size: 27
+	};
+}
 function preload() {
+	// fetch player info + current local configuration
+	reload_player_info();
+
 }
 
 function create() {
@@ -291,19 +351,15 @@ function release_chaser() {
 function playerReachsExitCallback() {
 	game_running = false;
 	display_win();
-	scene_obj.time.delayedCall(2000, () => {
-		//scene_obj.scene.restart();
-	});
+	// reload new config
+	display_play_next();
 }
 
 
 function chaserCatchPlayerCallback() {
 	game_running = false;
 	display_game_over();
-	//scene_obj.scene.sleep();
-	scene_obj.time.delayedCall(2000, () => {
-		//scene_obj.scene.restart();
-	});
+	display_play_next();
 }
 
 
@@ -329,14 +385,6 @@ function startGame() {
 	// ball.body.velocity.set(150, -150);
 	//playing = true;
 }
-
-
-// function add_start_button() {
-// 	const centerX = this.scale.width / 2;
-// 	const centerY = this.scale.height / 2;
-// 	start_button = this.add.image(centerX, centerY, 'button').setInteractive();
-// 	//start_button.on('pointerdown', startGame);
-// }
 
 
 function render_game_scene_objects() {
@@ -385,18 +433,6 @@ function display_game_over() {
 	document.querySelector('#canvas').classList.toggle('hidden');
 }
 
-// XXXXXXX
-// document.querySelector('.restart_button').addEventListener('click', function () {
-// 	console.log("Button is clicked");
-// 	//scene_obj.scene.stop();
-// 	scene_obj.scene.restart();
-
-// });
-// document.querySelector('.stop_button').addEventListener('click', function () {
-// 	console.log("Button is clicked");
-// 	scene_obj.scene.stop();
-// });
-
 function start_game() {
 	// hide button 
 	document.querySelector('#start_game_button').classList.toggle('hidden');
@@ -430,6 +466,3 @@ function setMainGroupVisible() {
 		child.setActive(true).setVisible(true); // Set all objects to active and visible when the event occurs
 	});
 }
-
-// start_game();
-export { start_game };
