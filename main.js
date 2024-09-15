@@ -4,11 +4,10 @@ import { start_game } from './game.js';
 // load jwt from local store to be used in further api requests
 const jwt = localStorage.getItem('jwt');
 // console.log(jwt);
-const TOP_PLAYERS_PERIOD = 60;
+const TOP_PLAYERS_REFRESH_PERIOD = 60;
 const top_players_ul = document.querySelector('#top_players_list');
 
 // fetch top players and then  periodically update top_players list
-
 const load_top_players = function () {
 	console.log("updating top players list");
 	const url = 'http://127.0.0.1:5600/top_players';
@@ -40,9 +39,7 @@ const load_top_players = function () {
 load_top_players();
 setInterval(() => {
 	load_top_players
-}, 1000 * TOP_PLAYERS_PERIOD);
-
-// fetch load top_players from api 
+}, 1000 * TOP_PLAYERS_REFRESH_PERIOD);
 
 
 // fetch user info from api and configure game with fetched settings

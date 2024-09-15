@@ -1,4 +1,4 @@
-
+const game_url = 'game.html'
 const login_item = document.querySelector('#login');
 const register_item = document.querySelector('#register');
 
@@ -70,7 +70,7 @@ submit_login.addEventListener('click', function () {
 
 					// method 1: 
 					// store the jwt in a cooki and use window.location.href = '/game.html';
-					window.location.href = '/index.html';
+					window.location.href = game_url;
 					// in the backend add new route to /game.html and send the file from server
 					// is there any security implications??? may be remove cooki after loading the new page?
 					// I think it is associated with the auth.html page and will not get set in game.html

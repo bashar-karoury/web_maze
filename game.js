@@ -1,13 +1,20 @@
-const mazeHeight = 31;   // beware of the plus one
-const mazeWidth = mazeHeight;
-const square_size = 27;
+// const mazeHeight = 31;   // beware of the plus one
+// const mazeWidth = mazeHeight;
+let current_maze_config = {
+	player_velocity: 150,
+	startup_delay: 200,
+	chasing_time_frequency: 20,
+	mazeHeight: 31,
+	square_size: 27
+};
+// const square_size = 27;
 const margin_between_squares = 2;
-const draw_square_size = square_size + margin_between_squares;
 const margin_from_left = 20;
 const margin_from_top = 20;
-const player_size = square_size;
+let player_size = current_maze_config.square_size;
+let draw_square_size = current_maze_config.square_size + margin_between_squares;
 const chasing_time_interval = 1000;
-const chasing_time_frequency = 20;
+// const chasing_time_frequency = 20;
 let intervalId;
 let player;
 let exit;
@@ -19,15 +26,18 @@ let start_button;
 let mazeData = [];
 let paths = [];
 
-let player_velocity = 150; // prev 160
+// let player_velocity = 150; // prev 160
 let count = 0;
 let chasing_counter = 0;
-let startup_delay = 200;
+// let startup_delay = 200;
 let startup_counter = 0;
-const canvas_width = Math.ceil(square_size * (mazeWidth + margin_between_squares) + margin_from_left * 5);
-const canvas_hight = Math.ceil(square_size * (mazeHeight + margin_between_squares) + margin_from_top * 5);
+const canvas_width = Math.ceil(current_maze_config.square_size * (current_maze_config.mazeHeight + margin_between_squares) + margin_from_left * 5);
+const canvas_hight = Math.ceil(current_maze_config.square_size * (current_maze_config.mazeHeight + margin_between_squares) + margin_from_top * 5);
 
 let game_running = false;
+let score;
+let level;
+
 let mainGroup;
 const phaser_config = {
 	type: Phaser.canvas,
@@ -87,7 +97,7 @@ function create() {
 }
 
 function update() {
-
+	let player_velocity = current_maze_config.player_velocity
 	//console.log(scene_obj.scene.visible);
 	if (game_running) {
 
@@ -179,7 +189,8 @@ function shuffle(array) {
 }
 
 function isInBounds(x, y) {
-	return x > 0 && x < mazeWidth - 1 && y > 0 && y < mazeHeight - 1;
+	let mazeWidth = current_maze_config.mazeHeight;
+	return x > 0 && x < mazeWidth - 1 && y > 0 && y < current_maze_config.mazeHeight - 1;
 }
 
 
@@ -187,7 +198,7 @@ function render_maze() {
 	for (let row = 0; row < mazeData.length; row++) {
 		for (let col = 0; col < mazeData[row].length; col++) {
 			if (mazeData[row][col] === 1) {
-				let wall = scene_obj.add.rectangle(draw_square_size * col + margin_from_left, draw_square_size * row + margin_from_top, square_size, square_size, 0x444444);
+				let wall = scene_obj.add.rectangle(draw_square_size * col + margin_from_left, draw_square_size * row + margin_from_top, current_maze_config.square_size, current_maze_config.square_size, 0x444444);
 				scene_obj.physics.add.existing(wall, true); // true makes it immovable
 				walls.add(wall);
 			}
@@ -197,16 +208,16 @@ function render_maze() {
 
 function render_exit() {
 	let lastPoint = paths[0].at(-1);
-	exit = scene_obj.add.rectangle(draw_square_size * lastPoint.x + margin_from_left, draw_square_size * lastPoint.y + margin_from_top, square_size, square_size, 0xFFFFFF);
+	exit = scene_obj.add.rectangle(draw_square_size * lastPoint.x + margin_from_left, draw_square_size * lastPoint.y + margin_from_top, current_maze_config.square_size, current_maze_config.square_size, 0xFFFFFF);
 	scene_obj.physics.add.existing(exit, true);
 }
 
 
 function init_mazeData() {
 
-	for (let row = 0; row < mazeHeight; row++) {
+	for (let row = 0; row < current_maze_config.mazeHeight; row++) {
 		mazeData[row] = [];
-		for (let col = 0; col < mazeWidth; col++) {
+		for (let col = 0; col < current_maze_config.mazeHeight; col++) {
 			mazeData[row][col] = 1; // Fill the grid with walls (1)
 		}
 	}
@@ -217,12 +228,12 @@ function init_mazeData() {
 
 function release_chaser() {
 	const selected_path = paths[0];
-	if (startup_counter++ < startup_delay)
+	if (startup_counter++ < current_maze_config.startup_delay)
 		return;
-	if (chasing_counter++ > chasing_time_frequency) {
+	if (chasing_counter++ > current_maze_config.chasing_time_frequency) {
 		if (count < selected_path.length) {
 			let point = selected_path[count];
-			let chase_block = scene_obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_top, square_size, square_size, 0xff0000);
+			let chase_block = scene_obj.add.rectangle(draw_square_size * point.x + margin_from_left, draw_square_size * point.y + margin_from_top, current_maze_config.square_size, current_maze_config.square_size, 0xff0000);
 			scene_obj.physics.add.existing(chase_block, true); //immovable
 			chase.add(chase_block);
 			mainGroup.addMultiple(chase.getChildren());
