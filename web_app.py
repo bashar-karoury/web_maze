@@ -7,7 +7,8 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 app = Flask(__name__)
-cors = CORS(app, resources={r"*": {"origins": "*"}})
+# cors = CORS(app, resources={r"*": {"origins": "*"}})
+CORS(app)
 app.config['JWT_SECRET_KEY'] = '17c57c8ed4dfd13f291743aa243ff6d12e545e98b8e4e331'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=120)
 jwt = JWTManager(app)
@@ -15,7 +16,8 @@ jwt = JWTManager(app)
 @app.teardown_appcontext
 def close_db(error):
     """ Remove the current SQLAlchemy Session """
-    close_session()
+    #close_session()
+    pass
 
 
 @app.route('/', methods=['GET'])

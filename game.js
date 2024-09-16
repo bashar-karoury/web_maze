@@ -5,7 +5,8 @@ const current_user_name = localStorage.getItem('current_user_name');
 //HTML items
 const level_value_item = document.querySelector('#level_value');
 const score_value_item = document.querySelector('#score_value');
-
+let current_score = 0;
+let current_level = 0;
 
 const TOP_PLAYERS_REFRESH_PERIOD = 60;
 const top_players_ul = document.querySelector('#top_players_list');
@@ -40,34 +41,33 @@ const load_top_players = function () {
 	})
 }
 
-const get_player_info = function () {
+const get_player_info = async function () {
 	console.log("loading player info");
 	let player_info;
 
 	const url = `http://127.0.0.1:5600/players_data/${current_user_name}`;
-	return fetch(url, {
-		method: 'GET',
-		headers: {
-			'Authorization': `Bearer ${jwt}`, // Include JWT token in Authorization header
-			'Content-Type': 'application/json', // You can set additional headers as needed
-		},
-	}).then(response => {
+	try {
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'Authorization': `Bearer ${jwt}`, // Include JWT token in Authorization header
+				'Content-Type': 'application/json', // You can set additional headers as needed
+			},
+		});
 		if (!response.ok)
 			throw (new Error("Failed Fetching Top Players"));
 		console.log(response);
-		return response.json();
-	}).then(data => {
-		console.log(data);
-		return (data);
-	}
-	).catch(err => {
+		const data_1 = await response.json();
+		console.log(data_1);
+		return (data_1);
+	} catch (err) {
 		console.error(err);
-	})
+	}
 }
 
 load_top_players();
 setInterval(() => {
-	load_top_players
+	load_top_players();
 }, 1000 * TOP_PLAYERS_REFRESH_PERIOD);
 
 document.querySelector('#start_game_button').addEventListener('click', function () {
@@ -143,22 +143,28 @@ const phaser_config = {
 const game = new Phaser.Game(phaser_config);
 
 const reload_player_info = async () => {
-	let player_info = await get_player_info();
-	// console.log("data----");
-	console.log(player_info);
-	// update score
-	update_score(player_info.score);
-	// update level
-	update_level(player_info.level_id);
-	// update level_config
-	// todo:- should equals the fetched data config
-	current_maze_config = {
-		player_velocity: 150,
-		startup_delay: 200,
-		chasing_time_frequency: 20,
-		mazeHeight: 31,
-		square_size: 27
-	};
+
+	try {
+		let player_info = await get_player_info();
+		// console.log("data----");
+		console.log(player_info);
+		// update score
+		update_score(player_info.score);
+		// update level
+		update_level(player_info.level_id);
+		// update level_config
+		// todo:- should equals the fetched data config
+		current_maze_config = {
+			player_velocity: 150,
+			startup_delay: 200,
+			chasing_time_frequency: 20,
+			mazeHeight: 31,
+			square_size: 27
+		};
+	}
+	catch (err) {
+		console.error(err);
+	}
 }
 function preload() {
 	// fetch player info + current local configuration
@@ -351,8 +357,10 @@ function playerReachsExitCallback() {
 	// todo display win
 
 	// update score and level
-	update_score();
-	update_level();
+	current_level++;
+	current_score = current_score + 10;
+	update_score(current_score);
+	update_level(current_level);
 
 	// todo post player_info to server
 	post_player_info().then(() => {
@@ -360,26 +368,26 @@ function playerReachsExitCallback() {
 	}).catch(err => {
 		console.error(err);
 	})
-	//
 }
 
 const post_player_info = function () {
 
 	// fetch post http request to post player info score and new level
 	const url = `http://127.0.0.1:5600/players_data/${current_user_name}`;
+	const data = {
+		score: current_score,
+		level_id: current_level,
+	}
 	return fetch(url, {
-		method: 'GET',
+		method: 'POST',
 		headers: {
 			'Authorization': `Bearer ${jwt}`, // Include JWT token in Authorization header
 			'Content-Type': 'application/json', // You can set additional headers as needed
 		},
-		data: {
-			score: ,
-			level_id:,
-		}
+		body: JSON.stringify(data) // Convert JS object to JSON string
 	}).then(response => {
 		if (!response.ok)
-			throw (new Error("Failed Fetching Top Players"));
+			throw (new Error("Failed Post player data to api"));
 		console.log(response);
 		return response.json();
 	}).then(data => {
@@ -396,16 +404,25 @@ const post_player_info = function () {
 
 function chaserCatchPlayerCallback() {
 	game_running = false;
+	// just for development purposes
+	post_player_info().then(() => {
+		start_new_game();
+	}).catch(err => {
+		console.error(err);
+	})
+
 	//todo display game over
-	start_new_game();
+	// start_new_game();
 }
 
 
 const update_score = function (score) {
 	score_value_item.textContent = score;
+	current_score = score;
 };
 const update_level = function (level) {
 	level_value_item.textContent = level;
+	current_level = level;
 };
 
 function render_player() {

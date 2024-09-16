@@ -86,6 +86,7 @@ def close_session():
 
 def update_player_data(username, player_data):
     """ update player data """
+    print("XXXXXXXXXXX updating player data");
     player = session.query(Player).filter(Player.username == username).first()
     player.update(**player_data)
     session.commit()
@@ -93,6 +94,7 @@ def update_player_data(username, player_data):
 
 def get_player_data(username):
     """ set score of username"""
+    print("XXXXXXXXXXX getting player data");
     player = session.query(Player).filter(Player.username == username).first()
     player_data = player.to_dict()
     player_data['current_level_config'] = player.level.config
