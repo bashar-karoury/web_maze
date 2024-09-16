@@ -154,13 +154,15 @@ const reload_player_info = async () => {
 		update_level(player_info.level_id);
 		// update level_config
 		// todo:- should equals the fetched data config
-		current_maze_config = {
-			player_velocity: 150,
-			startup_delay: 200,
-			chasing_time_frequency: 20,
-			mazeHeight: 31,
-			square_size: 27
-		};
+		console.log(player_info.current_level_config)
+		current_maze_config = player_info.current_level_config;
+		/* current_maze_config = {
+				player_velocity: 150,
+				startup_delay: 200,
+				chasing_time_frequency: 20,
+				mazeHeight: 31,
+				square_size: 27
+			};*/
 	}
 	catch (err) {
 		console.error(err);
