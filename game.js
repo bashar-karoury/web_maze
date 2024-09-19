@@ -142,8 +142,8 @@ function start_game() {
 	// create game object
 	game = new Phaser.Game(phaser_config);
 	// hide button 
-	document.querySelector('#start_game_button').classList.toggle('hidden');
-
+	document.querySelector('#start_game_button').classList.add('hidden');
+	document.querySelector('#canvas').classList.remove('hidden');
 	// show canvas
 	// document.querySelector('#canvas').classList.toggle('hidden');
 	//setMainGroupVisible();
@@ -381,6 +381,7 @@ function playerReachsExitCallback() {
 	// todo post player_info to server
 	post_player_info().then(() => {
 		document.querySelector('#next_game_button').classList.remove('hidden');
+		load_top_players();
 		//start_next_game();
 	}).catch(err => {
 		console.error(err);
