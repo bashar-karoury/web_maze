@@ -75,7 +75,13 @@ session = Session()
 def add_to_database(obj):
     """ Add object to database """
     session.add(obj)
-    session.commit()
+    try:
+        session.commit()
+    except Exception as e:
+        session.rollback()  # Rollback the transaction on exception
+    finally:
+        session.close()
+
 
 
 def close_session():
@@ -89,7 +95,10 @@ def update_player_data(username, player_data):
     print("XXXXXXXXXXX updating player data");
     player = session.query(Player).filter(Player.username == username).first()
     player.update(**player_data)
-    session.commit()
+    try:
+        session.commit()
+    except Exception as e:
+        session.rollback()
 
 
 def get_player_data(username):

@@ -65,23 +65,6 @@ const get_player_info = async function () {
 	}
 }
 
-load_top_players();
-setInterval(() => {
-	load_top_players();
-}, 1000 * TOP_PLAYERS_REFRESH_PERIOD);
-
-document.querySelector('#start_game_button').addEventListener('click', function () {
-	console.log("Button is clicked");
-	start_game();
-});
-
-// document.querySelector('#next_game_button').addEventListener('click', next_game);
-// const next_game = function () {
-// 	console.log("Button is clicked");
-// 	// reload config
-// 	start_game();
-// }
-
 
 let current_maze_config = {
 	player_velocity: 150,
@@ -120,7 +103,7 @@ let canvas_hight = Math.ceil(current_maze_config.square_size * (current_maze_con
 let game_running = false;
 let score;
 let level;
-
+let game;
 let mainGroup;
 const phaser_config = {
 	type: Phaser.canvas,
@@ -140,7 +123,34 @@ const phaser_config = {
 	}
 };
 
-const game = new Phaser.Game(phaser_config);
+
+load_top_players();
+setInterval(() => {
+	load_top_players();
+}, 1000 * TOP_PLAYERS_REFRESH_PERIOD);
+
+document.querySelector('#start_game_button').addEventListener('click', function () {
+	console.log("Button is clicked");
+	start_game();
+});
+document.querySelector('#next_game_button').addEventListener('click', function () {
+	console.log("Button is clicked");
+	start_next_game();
+})
+function start_game() {
+
+	// create game object
+	game = new Phaser.Game(phaser_config);
+	// hide button 
+	document.querySelector('#start_game_button').classList.toggle('hidden');
+
+	// show canvas
+	// document.querySelector('#canvas').classList.toggle('hidden');
+	//setMainGroupVisible();
+	// scene_obj.scene.resume();
+}
+
+
 
 const reload_player_info = async () => {
 
@@ -175,6 +185,7 @@ function preload() {
 }
 
 function create() {
+	console.log("Debug:: called here");
 	scene_obj = this;
 	// Create the maze layout using a 2D array
 
@@ -200,8 +211,8 @@ function create() {
 	mainGroup.add(player);
 	mainGroup.add(exit);
 	game_running = true;
-	setMainGroupInvisible();
-	this.scene.pause();
+	// setMainGroupInvisible();
+	// this.scene.pause();
 	count = 0;
 	startup_counter = 0;
 
@@ -356,6 +367,9 @@ function release_chaser() {
 
 function playerReachsExitCallback() {
 	game_running = false;
+	pause_game();
+	// display gameover
+	display_win();
 	// todo display win
 
 	// update score and level
@@ -366,8 +380,26 @@ function playerReachsExitCallback() {
 
 	// todo post player_info to server
 	post_player_info().then(() => {
-		start_new_game();
+		document.querySelector('#next_game_button').classList.remove('hidden');
+		//start_next_game();
 	}).catch(err => {
+		console.error(err);
+	})
+}
+
+
+function chaserCatchPlayerCallback() {
+
+	game_running = false;
+	pause_game();
+	// display gameover
+	display_game_over();
+	post_player_info().then(() => {
+		// show new game button on top of game
+		document.querySelector('#next_game_button').classList.remove('hidden');
+		//start_next_game();
+	}).catch(err => {
+		console.error("Can't post player info");
 		console.error(err);
 	})
 }
@@ -404,18 +436,6 @@ const post_player_info = function () {
 
 
 
-function chaserCatchPlayerCallback() {
-	game_running = false;
-	// just for development purposes
-	post_player_info().then(() => {
-		start_new_game();
-	}).catch(err => {
-		console.error(err);
-	})
-
-	//todo display game over
-	// start_new_game();
-}
 
 
 const update_score = function (score) {
@@ -450,6 +470,8 @@ function startGame() {
 }
 
 
+
+
 function render_game_scene_objects() {
 	render_maze();
 	render_exit();
@@ -481,28 +503,41 @@ function display_win() {
 		fill: '#ffffff'
 	});
 }
-function start_new_game() {
-	setMainGroupInvisible();
+
+function display_game_over() {
+	const centerX = scene_obj.scale.width / 3;
+	const centerY = scene_obj.scale.height / 4;
+	scene_obj.add.text(centerX, centerY, 'Game Over!', {
+		fontSize: '92px',
+		fill: '#ffffff'
+	});
+}
+function start_next_game() {
+	//setMainGroupInvisible();
+
+	// hide next game button
+	document.querySelector('#next_game_button').classList.add('hidden');
+	//setMainGroupInvisible();
+
 	restart_game();
 	// show button 
-	document.querySelector('#start_game_button').classList.remove('hidden');
+	// document.querySelector('#start_game_button').classList.remove('hidden');
 	// hide canvas
-	document.querySelector('#canvas').classList.add('hidden');
+	// document.querySelector('#canvas').classList.add('hidden');
 }
 
-function start_game() {
-	// hide button 
-	document.querySelector('#start_game_button').classList.toggle('hidden');
-	// show canvas
-	document.querySelector('#canvas').classList.toggle('hidden');
-	setMainGroupVisible();
-	scene_obj.scene.resume();
+function _start_game() {
+	scene_obj.scene.start();
 }
-
 
 function restart_game() {
 	scene_obj.scene.restart();
 }
+
+function pause_game() {
+	scene_obj.scene.pause();
+}
+
 
 function stop_game() {
 	scene_obj.scene.stop();
