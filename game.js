@@ -395,14 +395,6 @@ function chaserCatchPlayerCallback() {
 	// display gameover
 	display_game_over();
 	document.querySelector('#next_game_button').classList.remove('hidden');
-	// post_player_info().then(() => {
-	// 	// show new game button on top of game
-
-	// 	//start_next_game();
-	// }).catch(err => {
-	// 	console.error("Can't post player info");
-	// 	console.error(err);
-	// })
 }
 
 const post_player_info = function () {
@@ -497,20 +489,22 @@ function generate_maze() {
 
 
 function display_win() {
-	const centerX = scene_obj.scale.width / 2;
-	const centerY = scene_obj.scale.height / 4;
-	scene_obj.add.text(centerX, centerY, 'You win!', {
-		fontSize: '32px',
-		fill: '#ffffff'
+	const centerX = scene_obj.scale.width / 6;
+	const centerY = scene_obj.scale.height / 8;
+	scene_obj.add.text(centerX, centerY, 'You Win!', {
+		fontSize: '182px',
+		fontFamily: 'Protest Guerrilla',
+		fill: '#1e90ff'
 	});
 }
 
 function display_game_over() {
-	const centerX = scene_obj.scale.width / 3;
-	const centerY = scene_obj.scale.height / 4;
-	scene_obj.add.text(centerX, centerY, 'Game Over!', {
-		fontSize: '92px',
-		fill: '#ffffff'
+	const centerX = scene_obj.scale.width / 15;
+	const centerY = scene_obj.scale.height / 8;
+	scene_obj.add.text(centerX, centerY, 'Game Over', {
+		fontSize: '182px',
+		fontFamily: 'Protest Guerrilla',
+		fill: '#ff0000'
 	});
 }
 function start_next_game() {
