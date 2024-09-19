@@ -394,14 +394,15 @@ function chaserCatchPlayerCallback() {
 	pause_game();
 	// display gameover
 	display_game_over();
-	post_player_info().then(() => {
-		// show new game button on top of game
-		document.querySelector('#next_game_button').classList.remove('hidden');
-		//start_next_game();
-	}).catch(err => {
-		console.error("Can't post player info");
-		console.error(err);
-	})
+	document.querySelector('#next_game_button').classList.remove('hidden');
+	// post_player_info().then(() => {
+	// 	// show new game button on top of game
+
+	// 	//start_next_game();
+	// }).catch(err => {
+	// 	console.error("Can't post player info");
+	// 	console.error(err);
+	// })
 }
 
 const post_player_info = function () {
