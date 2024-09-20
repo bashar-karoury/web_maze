@@ -129,6 +129,11 @@ header {
 	color: red;
 }
 
+#Trapped {
+	font-size: 34px;
+	color: #444444
+}
+
 #top-players {
 	/* flex-grow: 1; */
 	/* padding: 20px; */
@@ -137,7 +142,8 @@ header {
 	text-align: left;
 	/* height: 20px; */
 	margin-top: 10px;
-	padding-left: 70px;
+	padding-left: 30px;
+	height: fit-content;
 
 
 

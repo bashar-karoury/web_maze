@@ -335,9 +335,6 @@ function render_maze() {
 	for (let row = 0; row < mazeData.length; row++) {
 		for (let col = 0; col < mazeData[row].length; col++) {
 			if (mazeData[row][col] === 1) {
-				console.log("X", draw_square_size * col + margin_from_left);
-				console.log("Y", draw_square_size * row + margin_from_top);
-				console.log("SIZE", current_maze_config.square_size)
 				let wall = scene_obj.add.rectangle(draw_square_size * col + margin_from_left, draw_square_size * row + margin_from_top, current_maze_config.square_size, current_maze_config.square_size, 0x444444);
 				scene_obj.physics.add.existing(wall, true); // true makes it immovable
 				walls.add(wall);
