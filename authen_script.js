@@ -36,7 +36,7 @@ const show_register = function () {
 
 }
 
-
+const server_ip = "127.0.0.1"
 submit_login.addEventListener('click', function () {
 	// sanitize inputs and add alert user if one of them is not accepted// todo
 	const user_name = login_username_input.value;
@@ -162,7 +162,7 @@ const validate_password = function (password, errorElementId) {
 const login_to_backend = async function (data_) {
 	try {
 
-		const url = 'http://127.0.0.1:5600/api/login';
+		const url = `http://${server_ip}/api/login`;
 		const response = await fetch(url, {
 			method: 'POST', // Specify the method as POST
 			headers: {
@@ -182,7 +182,7 @@ const login_to_backend = async function (data_) {
 const register_to_backend = async function (data) {
 	try {
 
-		const url = 'http://127.0.0.1:5600/api/register';
+		const url = `http://${server_ip}/api/register`;
 		const response = await fetch(url, {
 			method: 'POST', // Specify the method as POST
 			headers: {

@@ -1,4 +1,5 @@
 // load jwt  and user_name from local store to be used in further api requests
+const server_ip = "127.0.0.1"
 const jwt = localStorage.getItem('jwt');
 const current_user_name = localStorage.getItem('current_user_name');
 
@@ -14,7 +15,7 @@ const top_players_ul = document.querySelector('#top_players_list');
 // fetch top players and then  periodically update top_players list
 const load_top_players = function () {
 	console.log("updating top players list");
-	const url = 'http://127.0.0.1:5600/api/top_players';
+	const url = `http://${server_ip}/api/top_players`;
 	fetch(url, {
 		method: 'GET',
 		headers: {
@@ -44,8 +45,7 @@ const load_top_players = function () {
 const get_player_info = async function () {
 	console.log("loading player info");
 	let player_info;
-
-	const url = `http://127.0.0.1:5600/api/players_data/${current_user_name}`;
+	const url = `http://${server_ip}/api/players_data/${current_user_name}`;
 	try {
 		const response = await fetch(url, {
 			method: 'GET',
@@ -403,7 +403,7 @@ function chaserCatchPlayerCallback() {
 const post_player_info = function () {
 
 	// fetch post http request to post player info score and new level
-	const url = `http://127.0.0.1:5600/api/players_data/${current_user_name}`;
+	const url = `http://${server_ip}/api/players_data/${current_user_name}`;
 	const data = {
 		score: current_score,
 		level_id: current_level,
