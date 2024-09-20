@@ -67,16 +67,15 @@ const get_player_info = async function () {
 
 
 let current_maze_config = {
-	player_velocity: 150,
+	player_velocity: 120,
 	startup_delay: 200,
-	chasing_time_frequency: 20,
-	mazeHeight: 31,
-	square_size: 27
+	chasing_time_frequency: 10,
+	mazeHeight: 29,
+	square_size: 16
 };
-// const square_size = 27;
 const margin_between_squares = 2;
-const margin_from_left = 20;
-const margin_from_top = 20;
+const margin_from_left = 15;
+const margin_from_top = 15;
 let player_size = current_maze_config.square_size;
 let draw_square_size = current_maze_config.square_size + margin_between_squares;
 const chasing_time_interval = 1000;
@@ -97,8 +96,8 @@ let count = 0;
 let chasing_counter = 0;
 // let startup_delay = 200;
 let startup_counter = 0;
-let canvas_width = Math.ceil(current_maze_config.square_size * (current_maze_config.mazeHeight + margin_between_squares) + margin_from_left * 5);
-let canvas_hight = Math.ceil(current_maze_config.square_size * (current_maze_config.mazeHeight + margin_between_squares) + margin_from_top * 5);
+let canvas_width = Math.ceil((draw_square_size * (current_maze_config.mazeHeight)) + margin_from_left * 1);
+let canvas_hight = Math.ceil((draw_square_size * (current_maze_config.mazeHeight)) + margin_from_top * 1);
 
 let game_running = false;
 let score;
@@ -107,8 +106,13 @@ let game;
 let mainGroup;
 const phaser_config = {
 	type: Phaser.canvas,
-	width: canvas_width,
-	height: canvas_hight,
+	width: 600,
+	height: 600,
+	// width: canvas_width,
+	// height: canvas_hight,
+	scale: {
+		mode: Phaser.Scale.FIT // Ensure no automatic scaling
+	},
 	canvas: document.getElementById('canvas'), // Use an already existing canvas
 	physics: {
 		default: 'arcade',
@@ -167,7 +171,7 @@ const reload_player_info = async () => {
 		// update level_config
 		// todo:- should equals the fetched data config
 		console.log(player_info.current_level_config)
-		current_maze_config = player_info.current_level_config;
+		// current_maze_config = player_info.current_level_config;
 		/* current_maze_config = {
 				player_velocity: 150,
 				startup_delay: 200,
@@ -324,6 +328,9 @@ function render_maze() {
 	for (let row = 0; row < mazeData.length; row++) {
 		for (let col = 0; col < mazeData[row].length; col++) {
 			if (mazeData[row][col] === 1) {
+				console.log("X", draw_square_size * col + margin_from_left);
+				console.log("Y", draw_square_size * row + margin_from_top);
+				console.log("SIZE", current_maze_config.square_size)
 				let wall = scene_obj.add.rectangle(draw_square_size * col + margin_from_left, draw_square_size * row + margin_from_top, current_maze_config.square_size, current_maze_config.square_size, 0x444444);
 				scene_obj.physics.add.existing(wall, true); // true makes it immovable
 				walls.add(wall);
