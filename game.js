@@ -30,10 +30,17 @@ const load_top_players = function () {
 	}).then(data => {
 		console.log(data);
 		top_players_ul.innerHTML = ''; // Clear all previous list items
+		let first = true;
 		for (let player of data.top) {
 			// todo: add specail emoji for top player 🥇🔥
 			const newListItem = document.createElement('li');
-			newListItem.textContent = `${player.name}: ${player.score}`;
+			if (first) {
+				newListItem.textContent = `${player.name}: ${player.score}🥇`;
+			}
+			else {
+				newListItem.textContent = `${player.name}: ${player.score}`;
+			}
+
 			top_players_ul.appendChild(newListItem);
 		}
 	}
