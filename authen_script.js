@@ -162,7 +162,7 @@ const validate_password = function (password, errorElementId) {
 const login_to_backend = async function (data_) {
 	try {
 
-		const url = 'http://127.0.0.1:5600/login';
+		const url = 'http://127.0.0.1:5600/api/login';
 		const response = await fetch(url, {
 			method: 'POST', // Specify the method as POST
 			headers: {
@@ -182,7 +182,7 @@ const login_to_backend = async function (data_) {
 const register_to_backend = async function (data) {
 	try {
 
-		const url = 'http://127.0.0.1:5600/register';
+		const url = 'http://127.0.0.1:5600/api/register';
 		const response = await fetch(url, {
 			method: 'POST', // Specify the method as POST
 			headers: {

@@ -14,7 +14,7 @@ const top_players_ul = document.querySelector('#top_players_list');
 // fetch top players and then  periodically update top_players list
 const load_top_players = function () {
 	console.log("updating top players list");
-	const url = 'http://127.0.0.1:5600/top_players';
+	const url = 'http://127.0.0.1:5600/api/top_players';
 	fetch(url, {
 		method: 'GET',
 		headers: {
@@ -45,7 +45,7 @@ const get_player_info = async function () {
 	console.log("loading player info");
 	let player_info;
 
-	const url = `http://127.0.0.1:5600/players_data/${current_user_name}`;
+	const url = `http://127.0.0.1:5600/api/players_data/${current_user_name}`;
 	try {
 		const response = await fetch(url, {
 			method: 'GET',
@@ -125,6 +125,8 @@ const phaser_config = {
 
 
 load_top_players();
+
+
 setInterval(() => {
 	load_top_players();
 }, 1000 * TOP_PLAYERS_REFRESH_PERIOD);
@@ -133,10 +135,12 @@ document.querySelector('#start_game_button').addEventListener('click', function 
 	console.log("Button is clicked");
 	start_game();
 });
+
 document.querySelector('#next_game_button').addEventListener('click', function () {
 	console.log("Button is clicked");
 	start_next_game();
 })
+
 function start_game() {
 
 	// create game object
@@ -149,8 +153,6 @@ function start_game() {
 	//setMainGroupVisible();
 	// scene_obj.scene.resume();
 }
-
-
 
 const reload_player_info = async () => {
 
@@ -178,6 +180,8 @@ const reload_player_info = async () => {
 		console.error(err);
 	}
 }
+
+
 function preload() {
 	// fetch player info + current local configuration
 	reload_player_info();
@@ -346,8 +350,6 @@ function init_mazeData() {
 
 }
 
-
-
 function release_chaser() {
 	const selected_path = paths[0];
 	if (startup_counter++ < current_maze_config.startup_delay)
@@ -401,7 +403,7 @@ function chaserCatchPlayerCallback() {
 const post_player_info = function () {
 
 	// fetch post http request to post player info score and new level
-	const url = `http://127.0.0.1:5600/players_data/${current_user_name}`;
+	const url = `http://127.0.0.1:5600/api/players_data/${current_user_name}`;
 	const data = {
 		score: current_score,
 		level_id: current_level,
@@ -428,14 +430,11 @@ const post_player_info = function () {
 
 }
 
-
-
-
-
 const update_score = function (score) {
 	score_value_item.textContent = score;
 	current_score = score;
 };
+
 const update_level = function (level) {
 	level_value_item.textContent = level;
 	current_level = level;
@@ -454,7 +453,6 @@ function render_player() {
 	scene_obj.physics.add.existing(player);
 }
 
-
 function startGame() {
 	start_button.destroy();
 	render_game_scene_objects();
@@ -462,9 +460,6 @@ function startGame() {
 	// ball.body.velocity.set(150, -150);
 	//playing = true;
 }
-
-
-
 
 function render_game_scene_objects() {
 	render_maze();

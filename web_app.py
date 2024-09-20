@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from datetime import timedelta
-from flask import Flask, jsonify, make_response, request
+from flask import Flask, jsonify, make_response, request, send_file
 from data_manager import close_session, Player, Level
 from data_manager import get_players_usernames, add_to_database, get_user_password, update_player_data, get_top_players, get_player_data
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
@@ -20,14 +20,14 @@ def close_db(error):
     pass
 
 
-@app.route('/', methods=['GET'])
+@app.route('/game', methods=['GET'])
 def authenticate():
     # return authenitcaiton page
-    return "non protected\n", 200
+    return send_file('authen.html'), 200
 # Authentication Api
 
 # register
-@app.route('/register', methods=['POST'])
+@app.route('/api/register', methods=['POST'])
 def register():
     data = request.get_json()
     username = request.json.get('username')
@@ -57,7 +57,7 @@ def register():
 
 
 # login
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     username = request.json.get('username')
     password = request.json.get('password')
@@ -79,7 +79,7 @@ def login():
     access_token = create_access_token(identity=username)
     return jsonify(access_token=access_token), 200
 
-@app.route('/top_players', methods=['GET'])
+@app.route('/api/top_players', methods=['GET'])
 @jwt_required()
 def top_players():
     current_user = get_jwt_identity()
@@ -89,7 +89,7 @@ def top_players():
     return jsonify(top=result), 200
 
 
-@app.route('/players_data/<username>', methods=['POST'])
+@app.route('/api/players_data/<username>', methods=['POST'])
 @jwt_required()
 def set_user_info(username):
     current_user = get_jwt_identity()
@@ -100,7 +100,7 @@ def set_user_info(username):
     update_player_data(username, player_data)
     return jsonify(get_player_data(username)), 200
 
-@app.route('/players_data/<username>', methods=['GET'])
+@app.route('/api/players_data/<username>', methods=['GET'])
 @jwt_required()
 def get_uesr_info(username):
     # no need for check for username 
