@@ -495,9 +495,9 @@ function display_win() {
 	const centerX = scene_obj.scale.width / 6;
 	const centerY = scene_obj.scale.height / 8;
 	scene_obj.add.text(centerX, centerY, 'You Win!', {
-		fontSize: '182px',
+		fontSize: '100px',
 		fontFamily: 'Protest Guerrilla',
-		fill: '#1e90ff'
+		fill: '#909BFF'
 	});
 }
 
@@ -505,9 +505,9 @@ function display_game_over() {
 	const centerX = scene_obj.scale.width / 15;
 	const centerY = scene_obj.scale.height / 8;
 	scene_obj.add.text(centerX, centerY, 'Game Over', {
-		fontSize: '182px',
+		fontSize: '100px',
 		fontFamily: 'Protest Guerrilla',
-		fill: '#ff0000'
+		fill: '#CEBABA'
 	});
 }
 function start_next_game() {
