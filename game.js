@@ -178,7 +178,7 @@ const reload_player_info = async () => {
 		// update level_config
 		// todo:- should equals the fetched data config
 		console.log(player_info.current_level_config)
-		// current_maze_config = player_info.current_level_config;
+		current_maze_config = player_info.current_level_config;
 		/* current_maze_config = {
 				player_velocity: 150,
 				startup_delay: 200,
