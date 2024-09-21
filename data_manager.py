@@ -105,7 +105,9 @@ def get_player_data(username):
     """ set score of username"""
     print("XXXXXXXXXXX getting player data");
     player = session.query(Player).filter(Player.username == username).first()
+    print(player)
     player_data = player.to_dict()
+    print(player_data)
     player_data['current_level_config'] = player.level.config
     return player_data
 

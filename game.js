@@ -36,6 +36,7 @@ const load_top_players = function () {
 			const newListItem = document.createElement('li');
 			if (first) {
 				newListItem.textContent = `${player.name}: ${player.score}🥇`;
+				first = false;
 			}
 			else {
 				newListItem.textContent = `${player.name}: ${player.score}`;
@@ -381,10 +382,8 @@ function release_chaser() {
 function playerReachsExitCallback() {
 	game_running = false;
 	pause_game();
-	// display gameover
+	// display win
 	display_win();
-	// todo display win
-
 	// update score and level
 	current_level++;
 	current_score = current_score + 10;
@@ -432,7 +431,7 @@ const post_player_info = function () {
 		console.log(response);
 		return response.json();
 	}).then(data => {
-		console.log(data);
+		console.log("posting data", data);
 		return (data);
 	}
 	).catch(err => {
