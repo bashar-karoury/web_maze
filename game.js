@@ -36,6 +36,7 @@ const load_top_players = function () {
 			const newListItem = document.createElement('li');
 			if (first) {
 				newListItem.textContent = `${player.name}: ${player.score}🥇`;
+				first = false;
 			}
 			else {
 				newListItem.textContent = `${player.name}: ${player.score}`;
