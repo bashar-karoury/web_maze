@@ -1,0 +1,163 @@
+* {
+	/* box-sizing: border-box; */
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+	background-color: black;
+	color: white;
+	height: 100%;
+	font-family: "Protest Guerrilla", sans-serif;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	/* height: 50vh; */
+	/* height: 100%; */
+}
+
+.main-container {
+	display: flex;
+	height: 100vh;
+	/* Full page height */
+}
+
+.left-container {
+
+	width: 50%;
+
+}
+
+.right-container {
+	width: 50%;
+	/* Each block takes 50% of the width */
+}
+
+
+header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	/* padding: 10px; */
+	/* background-color: #f0f0f0; */
+	border-bottom: 2px solid black;
+	/* width: 50%; */
+	height: 200px;
+
+}
+
+#logo {
+	font-size: 120px;
+	font-weight: bold;
+	/* font-family: "Rubik Maze", system-ui; */
+	font-family: "Protest Guerrilla", sans-serif;
+	font-weight: 1;
+	font-style: normal;
+	padding-top: 20px;
+	padding-left: 10px;
+}
+
+
+
+
+#summary {
+	margin-bottom: 20px;
+	/* padding: 20px; */
+	/* background-color: #f4e3cb; */
+	/* border: 2px solid brown; */
+	text-align: center;
+	height: 20%;
+
+
+}
+
+#summary p {
+	padding-left: 30px;
+	height: 20px;
+	text-align: left;
+	font-size: 24px;
+	font-weight: 100;
+}
+
+#chaser {
+	color: red;
+}
+
+#Trapped {
+	font-size: 34px;
+	color: #938e8e
+}
+
+.maze_image {
+	padding-top: 20px;
+	width: 97%;
+	height: 97%;
+	background-image: url('maze.png');
+	background-size: cover;
+	/* Ensures the image covers the whole area */
+	background-position: center;
+	/* Centers the image */
+	background-repeat: no-repeat;
+	/* Prevents the image from repeating */
+}
+
+.links {
+	display: flex;
+	flex-direction: column;
+	height: fit-content;
+}
+
+.play_now_container {
+	height: 200px;
+	text-align: center;
+}
+
+
+
+#play_now {
+	height: fit-content;
+	/* width: fit-content; */
+	font-size: 98px;
+	text-align: center;
+	text-decoration: none;
+	transition: color 0.3s ease;
+
+}
+
+#play_now:hover {
+	font-size: 128px;
+	color: rgb(23, 96, 222);
+	/* Zooms the link */
+}
+
+.github_repo_container {
+	height: 50%;
+	text-align: center;
+	border: 2px solid rgb(56, 56, 52);
+}
+
+#gitub_label {
+	font-size: 25px;
+	font-weight: 300;
+	text-align: left;
+	/* margin-left: 60px; */
+	padding-left: 30px;
+	padding-bottom: 10px;
+
+}
+
+#github_repo {
+	margin-top: 80px;
+	height: fit-content;
+	font-size: 28px;
+	text-align: center;
+	transform-origin: center;
+	color: #a19c8c;
+	/* Prevents layout shift on scaling */
+
+
+}
