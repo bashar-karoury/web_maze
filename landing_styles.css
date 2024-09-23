@@ -112,7 +112,7 @@ header {
 }
 
 .play_now_container {
-	height: 200px;
+	height: 250px;
 	text-align: center;
 }
 
@@ -125,6 +125,7 @@ header {
 	text-align: center;
 	text-decoration: none;
 	transition: color 0.3s ease;
+	cursor: pointer;
 
 }
 
@@ -157,7 +158,8 @@ header {
 	text-align: center;
 	transform-origin: center;
 	color: #a19c8c;
-	/* Prevents layout shift on scaling */
+}
 
-
+#github_repo:hover {
+	font-size: 30px;
 }
