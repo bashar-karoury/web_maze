@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>The Web Maze</title>
+	<link rel="stylesheet" href="styles.css">
+	<script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Protest+Guerrilla&display=block"" rel=" stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Rubik+Maze&display=block"" rel=" stylesheet">
+</head>
+
+<body>
+	<div class="main-container">
+		<div class="left-container">
+			<header>
+				<div id="logo">The Web Maze</div>
+
+
+				<!-- <button class="start_button"> Start the Game </button>
+		<button class="restart_button"> Restart the Game </button>
+		<button class="stop_button"> Stop the Game </button> -->
+			</header>
+			<!-- <section id="sidebar"> -->
+			<div id="summary">
+				<p> <span id="Trapped">Trapped</span> in a twisting maze, your only hope is to move fast. The <span
+						id="chaser">Chaser</span> is
+					always one step behind, so plan your moves carefully and escape before it closes in!
+				</p>
+			</div>
+			<div id="top-players">
+				<h2>🏆 Top Players</h2>
+				<ul id="top_players_list">
+					<!-- <li> 🥉Ahmed 160</li>
+					<li> 🥇bashar 140</li>
+					<li> 🥈basil 120</li>
+					<li> 🥉Mohammad 100</li> -->
+
+				</ul>
+			</div>
+			<!-- </section> -->
+		</div>
+		<div class="right-container">
+			<div id="level-score">
+				<div id="level">LEVEL:<span id="level_value"> </span></div>
+				<div id="score">SCORE:<span id="score_value"> </span></div>
+			</div>
+			<section id="game-area">
+				<button class="game_buttons" id="start_game_button"> Start Game </button>
+				<button class="game_buttons hidden" id="next_game_button"> Next Game </button>
+				<canvas class="hidden" id="canvas"></canvas>
+			</section>
+		</div>
+	</div>
+	<script type="module" src="game.js"></script>
+</body>
+
+</html>
