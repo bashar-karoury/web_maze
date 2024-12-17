@@ -1,4 +1,5 @@
 const game_url = 'game.html'
+const server_ip = "54.226.5.216"
 const login_item = document.querySelector('#login');
 const register_item = document.querySelector('#register');
 
@@ -36,7 +37,6 @@ const show_register = function () {
 
 }
 
-const server_ip = "127.0.0.1"
 submit_login.addEventListener('click', function () {
 	// sanitize inputs and add alert user if one of them is not accepted// todo
 	const user_name = login_username_input.value;

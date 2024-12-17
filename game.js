@@ -1,5 +1,5 @@
 // load jwt  and user_name from local store to be used in further api requests
-const server_ip = "127.0.0.1"
+const server_ip = "54.226.5.216"
 const jwt = localStorage.getItem('jwt');
 const current_user_name = localStorage.getItem('current_user_name');
 
